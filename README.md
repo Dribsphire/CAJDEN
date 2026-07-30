@@ -5,8 +5,8 @@ admin panel, built with React (frontend), PHP REST API (backend), and MySQL.
 
 ## Project overview
 <p align="center">
-  <img src="screenshots/showcase1.png" width="40%">
-  <img src="screenshots/showcase1.png" width="40%">
+  <img src="screenshots/showcase3.png" width="40%">
+  <img src="screenshots/showcase2.png" width="40%">
 </p>
 
 <p align="center">
