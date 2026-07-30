@@ -1,0 +1,90 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 248, 242, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.navbar-scrolled {
+  box-shadow: 0 4px 20px rgba(31, 77, 61, 0.08);
+  border-bottom-color: rgba(31, 77, 61, 0.08);
+}
+.navbar-logo {
+  height: 80px;
+  width: auto;
+}
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-forest-dark);
+}
+.navbar-brand svg { color: var(--color-gold-dark); font-size: 1.3rem; }
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navbar-link {
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-charcoal-soft);
+  padding: 6px 0;
+}
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0; height: 2px;
+  background: var(--color-gold);
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+.navbar-link:hover, .navbar-link.active { color: var(--color-forest-dark); }
+.navbar-link.active::after, .navbar-link:hover::after { width: 100%; }
+
+.navbar-cta { margin-left: 8px; padding: 10px 20px; font-size: 0.88rem; }
+
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--color-forest-dark);
+}
+
+@media (max-width: 900px) {
+  .navbar-toggle { display: block; }
+  .navbar-links {
+    position: fixed;
+    top: 76px; left: 0; right: 0;
+    background: var(--color-cream);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 16px 24px 28px;
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+  }
+  .navbar-links.is-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .navbar-link { padding: 10px 0; width: 100%; }
+  .navbar-cta { margin-left: 0; margin-top: 8px; }
+}

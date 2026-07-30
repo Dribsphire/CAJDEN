@@ -1,0 +1,48 @@
+# =========================================================
+# Environment secrets — never commit real credentials
+# =========================================================
+backend/.env
+backend/.env.local
+frontend/.env
+frontend/.env.local
+.env
+.env.local
+
+# =========================================================
+# Dependencies
+# =========================================================
+node_modules/
+backend/vendor/
+
+# =========================================================
+# Build output
+# =========================================================
+frontend/dist/
+dist/
+
+# =========================================================
+# User-uploaded content (generated at runtime, not source)
+# =========================================================
+backend/uploads/officers/*
+backend/uploads/services/*
+backend/uploads/posts/*
+!backend/uploads/officers/.gitkeep
+!backend/uploads/services/.gitkeep
+!backend/uploads/posts/.gitkeep
+!backend/uploads/.htaccess
+
+# =========================================================
+# Logs
+# =========================================================
+*.log
+npm-debug.log*
+backend/php_errors.log
+
+# =========================================================
+# OS / editor junk
+# =========================================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

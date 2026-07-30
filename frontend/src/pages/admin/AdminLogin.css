@@ -1,0 +1,15 @@
+.admin-login-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--color-forest-dark), var(--color-forest));
+  padding: 20px;
+}
+.admin-login-card {
+  background: var(--color-white); border-radius: var(--radius-lg);
+  padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: var(--shadow-lift);
+}
+.admin-login-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--color-forest-dark); }
+.admin-login-brand svg { color: var(--color-gold-dark); }
+.admin-login-sub { font-size: 0.88rem; margin: 8px 0 24px; }
+.admin-login-error { background: #fbeceb; color: var(--color-danger); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 16px; }
+.admin-login-btn { width: 100%; justify-content: center; margin-top: 6px; }

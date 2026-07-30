@@ -1,0 +1,222 @@
+.org-chart {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Shared vertical connector between major tiers */
+.org-connector {
+  width: 2px;
+  height: 30px;
+  background: var(--color-gold);
+}
+
+/* Generic chart box (Board of Trustees / department labels) */
+.org-box {
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.org-box-trustees {
+  background: var(--color-forest);
+  color: #fff;
+  min-width: 220px;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-soft);
+}
+.org-box-dept {
+  background: #fff;
+  border: 2px solid var(--color-forest);
+  color: var(--color-forest-dark);
+  min-width: 170px;
+}
+
+/* Small horizontal stub connecting a box to its branch trunk */
+.org-stem {
+  width: 26px;
+  height: 2px;
+  background: var(--color-gold);
+  flex-shrink: 0;
+}
+
+/* ---- Board of Trustees row: box on the left, members branch right ---- */
+.org-trustees-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Elbow-branch container: vertical trunk + one horizontal stub per card */
+.org-branch-right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 20px;
+  flex: 1;
+}
+.org-branch-right::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22px;
+  bottom: 22px;
+  width: 2px;
+  background: var(--color-gold);
+}
+.org-branch-right .org-person-card { position: relative; }
+.org-branch-right .org-person-card::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background: var(--color-gold);
+}
+
+/* ---- Executive Director ---- */
+.org-ed-wrap { display: flex; justify-content: center; }
+
+/* ---- Departments row with bus connector + drops ---- */
+.org-departments-row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding-top: 30px;
+  width: 100%;
+}
+.org-departments-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: var(--color-gold);
+}
+.org-department {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.org-department::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 30px;
+  background: var(--color-gold);
+}
+.org-branch-right-dept { padding-left: 20px; }
+
+/* ---- Person cards ---- */
+.org-person-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--color-sage);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-soft);
+  min-width: 190px;
+}
+.org-person-photo {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--color-sage);
+  color: var(--color-forest);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0; font-size: 0.9rem;
+  border: 2px solid var(--color-gold);
+}
+.org-person-photo img { width: 100%; height: 100%; object-fit: cover; }
+.org-person-text { display: flex; flex-direction: column; line-height: 1.25; }
+.org-person-text strong { font-size: 0.82rem; color: var(--color-forest-dark); }
+.org-person-text span { font-size: 0.7rem; color: var(--color-charcoal-soft); }
+
+.org-person-lg { padding: 14px 22px; min-width: 240px; }
+.org-person-lg .org-person-photo { width: 58px; height: 58px; font-size: 1.4rem; }
+.org-person-lg .org-person-text strong { font-size: 0.95rem; }
+.org-person-lg .org-person-text span { font-size: 0.76rem; }
+
+/* ---- Partner organizations ---- */
+.org-partners {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+.org-partners-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.org-partners-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+}
+.org-partner-chip {
+  background: var(--color-sage);
+  border: 1px solid var(--color-forest);
+  color: var(--color-forest-dark);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+  .org-departments-row::before,
+  .org-department::before { display: none; }
+  .org-trustees-row { flex-direction: column; align-items: center; }
+  .org-box-trustees { margin-bottom: 16px; }
+  .org-stem { display: none; }
+  .org-branch-right { padding-left: 0; align-items: center; }
+  .org-branch-right::before { display: none; }
+  .org-branch-right .org-person-card::before { display: none; }
+  .org-departments-row { gap: 30px; }
+}
+
+/* Extra small screens: make cards full-width and stack departments vertically */
+@media (max-width: 600px) {
+  .org-chart { padding: 0 12px; }
+  .org-trustees-row { align-items: center; }
+  .org-branch-right, .org-branch-right-dept { padding-left: 0; align-items: stretch; }
+  .org-branch-right { gap: 10px; }
+  .org-branch-right .org-person-card { min-width: 0; width: 100%; }
+  .org-person-card { padding: 10px 12px; }
+  .org-person-photo { width: 40px; height: 40px; }
+  .org-person-lg { padding: 12px 14px; min-width: 0; }
+  .org-person-lg .org-person-photo { width: 48px; height: 48px; }
+  .org-person-text strong { font-size: 0.9rem; }
+
+  .org-departments-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding-top: 18px;
+  }
+  .org-department { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
+  .org-box-dept { margin-bottom: 8px; }
+  .org-branch-right-dept { padding-left: 0; display: flex; flex-direction: column; gap: 8px; }
+  .org-partners-row { justify-content: flex-start; }
+}

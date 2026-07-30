@@ -1,0 +1,4 @@
+# Prevent execution of any script uploaded to this directory (defense in depth)
+<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|cgi|asp|sh)$">
+    Require all denied
+</FilesMatch>

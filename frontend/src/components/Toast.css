@@ -1,0 +1,17 @@
+.toast {
+  position: fixed;
+  bottom: 26px; right: 26px;
+  z-index: 1000;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 0.92rem;
+  box-shadow: var(--shadow-lift);
+  animation: fadeIn 0.3s ease both;
+  max-width: 340px;
+}
+.toast-success { background: var(--color-success); }
+.toast-error { background: var(--color-danger); }
+.toast button { background: none; border: none; color: #fff; font-size: 1.1rem; margin-left: auto; line-height: 1; opacity: 0.8; }
+.toast button:hover { opacity: 1; }

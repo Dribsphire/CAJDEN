@@ -1,0 +1,7 @@
+{
+    "name": "ngo/backend-api",
+    "description": "PHP REST API backend for the NGO Website Management System",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

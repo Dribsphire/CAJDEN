@@ -1,0 +1,160 @@
+/* =========================================================
+   DESIGN TOKENS — Negros Bayanihan Foundation
+   Palette drawn from the island itself: sugarcane-field green,
+   sunrise-over-Kanlaon gold, and volcanic charcoal.
+   ========================================================= */
+:root {
+  --color-forest: #1f4d3d;       /* primary — deep sugarcane green */
+  --color-forest-dark: #143329;
+  --color-gold: #e2a33d;         /* accent — Negros sunrise gold */
+  --color-gold-dark: #c6862a;
+  --color-cream: #faf8f2;        /* background */
+  --color-sage: #e9f0e8;         /* soft section background */
+  --color-charcoal: #202b26;     /* text */
+  --color-charcoal-soft: #566159;
+  --color-white: #ffffff;
+  --color-danger: #c0392b;
+  --color-success: #2f7a4d;
+
+  --font-display: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --shadow-soft: 0 8px 24px rgba(31, 77, 61, 0.08);
+  --shadow-lift: 0 16px 40px rgba(31, 77, 61, 0.14);
+
+  --container-width: 1180px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  background: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Site-wide logo watermark. Sits behind all content; opaque section
+   backgrounds (like .section-sage) will still cover it, which is fine —
+   it shows through on the plain cream areas between sections. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('./assets/logo/cajdencolored.png');
+  background-repeat: no-repeat;
+  background-position: center 15%;
+  background-size: min(55vw, 560px);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-forest-dark);
+  margin: 0 0 0.5em;
+  line-height: 1.2;
+}
+
+p { line-height: 1.7; color: var(--color-charcoal-soft); }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; }
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section { padding: 84px 0; }
+.section-sage { background: var(--color-sage); }
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+  margin-bottom: 12px;
+}
+
+.section-heading { max-width: 620px; margin-bottom: 44px; }
+.section-heading h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.section-heading p { font-size: 1.05rem; margin-top: 10px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.btn-primary { background: var(--color-forest); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-forest-dark); transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+.btn-gold { background: var(--color-gold); color: var(--color-forest-dark); }
+.btn-gold:hover { background: var(--color-gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+.btn-outline { background: transparent; color: var(--color-forest); border: 1.5px solid var(--color-forest); }
+.btn-outline:hover { background: var(--color-forest); color: var(--color-white); }
+.btn:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--color-sage);
+  color: var(--color-forest);
+  text-transform: capitalize;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.fade-in { animation: fadeIn 0.6s ease both; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+@media (max-width: 640px) {
+  .section { padding: 56px 0; }
+}

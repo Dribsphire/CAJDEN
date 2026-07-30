@@ -1,0 +1,13 @@
+.post-detail-cover { height: 380px; background: var(--color-sage); }
+.post-detail-cover img { width: 100%; height: 100%; object-fit: cover; }
+.post-detail-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--color-sage), #d7e6da); }
+
+.post-detail-body { max-width: 760px; padding-top: 40px; padding-bottom: 80px; }
+.post-detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--color-forest); font-weight: 600; font-size: 0.9rem; margin-bottom: 20px;
+}
+.post-detail-body h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin: 12px 0 16px; }
+.post-detail-meta { display: flex; gap: 22px; flex-wrap: wrap; font-size: 0.88rem; color: var(--color-charcoal-soft); margin-bottom: 30px; }
+.post-detail-meta span { display: flex; align-items: center; gap: 6px; }
+.post-detail-content p { margin-bottom: 18px; font-size: 1.02rem; }
