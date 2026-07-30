@@ -49,7 +49,7 @@ export default function Home() {
         <div className="container hero-inner">
           <div className="hero-copy fade-in">
             <span className="eyebrow">Serving Negros Island Since 2013</span>
-            <h1>{settings.org_name || 'Negros Bayanihan Foundation'}</h1>
+            <h1>{settings.org_name || 'CAJDEN Inc.'}</h1>
             <p className="hero-lead">
               {settings.mission || 'Empowering Negrosanon communities through sustainable programs in education, health, and livelihood — barangay by barangay, island-wide.'}
             </p>

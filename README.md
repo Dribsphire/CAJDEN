@@ -3,6 +3,16 @@
 A 5-page NGO website (Home, About, Services, News & Blog, Contact) with a secure
 admin panel, built with React (frontend), PHP REST API (backend), and MySQL.
 
+## Project overview
+<p align="center">
+  <img src="screenshots/showcase1.png" width="40%">
+  <img src="screenshots/showcase1.png" width="40%">
+</p>
+
+<p align="center">
+  <img src="screenshots/showcase1.png" width="40%">
+</p>
+
 ## Project structure
 
 ```
@@ -56,9 +66,6 @@ ngo-project/
    - Paste that 16-character password into `GMAIL_APP_PASSWORD` in `.env`.
 
 **Default admin login:** username `admin`, password `Admin@12345`
-(change this immediately after first login — there's no "change password" UI yet,
-so update the `password_hash` column directly, e.g. with `password_hash()` in a
-small PHP script, or add a change-password endpoint).
 
 ## 2. Frontend setup
 
@@ -117,7 +124,3 @@ drag-based hierarchy reordering), offices (with map sync), contact messages,
 site-wide settings, search/filter/pagination on News & Blog, and a working
 contact form that emails your Gmail via PHPMailer.
 
-Reasonable next steps for a production launch: an admin "change password" flow,
-CSRF tokens on state-changing admin requests, rate-limiting on `/api/contact.php`
-and `/api/login.php`, a rich text editor for post content (e.g. TipTap or
-Quill) instead of the plain textarea, and image optimization/resizing on upload.

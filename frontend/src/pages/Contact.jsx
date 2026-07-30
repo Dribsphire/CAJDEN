@@ -63,7 +63,7 @@ export default function Contact() {
             <ul className="contact-info-list">
               <li><FaMapMarkerAlt /> <span>{settings.org_address || 'Rizal St., Bacolod City, Negros Occidental'}</span></li>
               <li><FaPhone /> <span>{settings.org_phone || '+63 34 123 4567'}</span></li>
-              <li><FaEnvelope /> <span>{settings.org_email || 'contact@negrosbayanihan.org'}</span></li>
+              <li><FaEnvelope /> <span>{settings.org_email || 'info@cajden.org'}</span></li>
               {settings.facebook_url && <li><FaFacebook /> <a href={settings.facebook_url} target="_blank" rel="noreferrer">Follow us on Facebook</a></li>}
             </ul>
 

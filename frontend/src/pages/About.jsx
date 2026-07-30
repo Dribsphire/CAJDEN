@@ -43,7 +43,7 @@ export default function About() {
             <span className="eyebrow">Our History</span>
             <h2>Christian Advocates for Justice and Development in Negros 2013</h2>
             <p>
-              {settings.org_name || 'Negros Bayanihan Foundation'} began as a volunteer relief effort after a series of
+              {settings.org_name || 'CAJDEN Inc.'} began as a volunteer relief effort after a series of
               typhoons left many Negrosanon families without access to basic services. What started as a handful of
               neighbors pooling resources grew into a registered non-profit organization now serving communities across
               both Negros Occidental and Negros Oriental.
