@@ -1,4 +1,4 @@
-# Negros Bayanihan Foundation — NGO Website Management System
+# Christian Advocates For Justice and Development in Negros — NGO Website Management System
 
 A 5-page NGO website (Home, About, Services, News & Blog, Contact) with a secure
 admin panel, built with React (frontend), PHP REST API (backend), and MySQL.
