@@ -60,13 +60,13 @@ export default function Home() {
           </div>
           <div className="hero-stats fade-in">
             <div className="hero-stat-card">
-              <FaUsers /> <div><strong>12,000+</strong><span>Lives reached</span></div>
+              <FaUsers /> <div><strong>4,000+</strong><span>Lives reached</span></div>
             </div>
             <div className="hero-stat-card">
               <FaMapMarkedAlt /> <div><strong>{offices.length || 4}</strong><span>Office & FBPOs in Negros</span></div>
             </div>
             <div className="hero-stat-card">
-              <FaHandHoldingHeart /> <div><strong>13 yrs</strong><span>Of community service</span></div>
+              <FaHandHoldingHeart /> <div><strong>12 yrs</strong><span>Of community in service</span></div>
             </div>
           </div>
         </div>

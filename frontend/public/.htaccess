@@ -1,0 +1,16 @@
+Options -MultiViews
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Serve existing files and directories directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Exclude API/backend/uploads routes from being rewritten to index
+  RewriteRule ^(api|backend|uploads)($|/) - [L]
+
+  # All other requests go to index.html (SPA fallback)
+  RewriteRule ^ index.html [L]
+</IfModule>
