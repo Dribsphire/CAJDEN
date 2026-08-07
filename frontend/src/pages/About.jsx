@@ -1,15 +1,31 @@
 import { useEffect, useState } from 'react';
-import { FaBullseye, FaEye, FaLeaf, FaHandshake, FaBalanceScale } from 'react-icons/fa';
+import { FaBullseye, FaEye, FaLeaf, FaHandshake, FaBalanceScale, FaHandsHelping, FaChild } from 'react-icons/fa';
 import api from '../api/axios';
 import { useSettings } from '../hooks/useSettings.js';
 import Hierarchy from '../components/Hierarchy.jsx';
 import './About.css';
 
 const CORE_VALUES = [
-  { icon: FaHandshake, title: 'Bayanihan Spirit', desc: 'Community-driven action rooted in mutual aid.' },
-  { icon: FaBalanceScale, title: 'Integrity', desc: 'Transparent and accountable in every program.' },
-  { icon: FaLeaf, title: 'Sustainability', desc: 'Solutions built to last beyond a single project.' },
-  { icon: FaHandshake, title: 'Inclusivity', desc: 'Every barangay, every family, matters equally.' },
+  {
+    icon: FaHandsHelping,
+    title: 'Compassion',
+    desc: 'Serving children, families, and communities with genuine care, respect, and empathy.'
+  },
+    {
+    icon: FaChild,
+    title: 'Child Protection',
+    desc: 'Upholding the rights, dignity, safety, and well-being of every child.'
+  },
+    {
+    icon: FaBalanceScale,
+    title: 'Social Justice',
+    desc: 'Promoting equality, human dignity, and opportunities for marginalized communities.'
+  },
+    {
+    icon: FaHandshake,
+    title: 'Partnership',
+    desc: 'Building strong collaborations with parishes, communities, volunteers, and partner organizations.'
+  },
 ];
 
 export default function About() {
@@ -43,14 +59,24 @@ export default function About() {
             <span className="eyebrow">Our History</span>
             <h2>Christian Advocates for Justice and Development in Negros 2013</h2>
             <p>
-              {settings.org_name || 'CAJDEN Inc.'} began as a volunteer relief effort after a series of
-              typhoons left many Negrosanon families without access to basic services. What started as a handful of
-              neighbors pooling resources grew into a registered non-profit organization now serving communities across
-              both Negros Occidental and Negros Oriental.
+              {settings.org_name || 'CAJDEN Inc.'} is a faith-based, non-government organization based in Bacolod City, Negros Occidental. Guided by Christian values and a commitment to social justice, 
+              the organization works alongside communities to protect the rights and dignity of children while promoting sustainable and inclusive development.
             </p>
             <p>
-              Today, the foundation runs year-round programs in health, education, livelihood, and disaster response —
-              guided by the same bayanihan spirit that inspired its founding.
+              Since its establishment, CAJDEN has dedicated its efforts to addressing child labor, preventing child abuse and exploitation, 
+              and empowering vulnerable children and their families. Recognizing that lasting change begins within the community, the organization 
+              partners with local leaders, parishes, volunteers, and other institutions throughout Negros Occidental to create programs that respond 
+              to the needs of the people it serves.
+            </p>
+            <p>
+              Over the years, CAJDEN has expanded its initiatives beyond child protection by implementing livelihood and community development 
+              programs that help families build stable and sustainable sources of income. Through education, advocacy, capacity-building, and strong 
+              community partnerships, the organization continues to strengthen its mission of creating safer environments where children can grow, learn, and thrive.
+            </p>
+            <p>
+              Today, CAJDEN remains committed to building compassionate and empowered communities by upholding children's rights, promoting 
+              social justice, and working hand in hand with churches, partner organizations, and communities across Negros Occidental to create 
+              lasting positive change.
             </p>
           </div>
         </div>
