@@ -1,151 +1,131 @@
 import { useEffect, useState } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaStar } from 'react-icons/fa';
-import api, { assetUrl } from '../../api/axios';
+import { Link } from 'react-router-dom';
+import { FaPlus, FaEdit, FaTrash, FaExternalLinkAlt, FaSearch, FaStar, FaEyeSlash, FaDownload, FaLink, FaFileAlt } from 'react-icons/fa';
+import api from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
-import { MATERIAL_TYPES } from '../../constants/materials.js';
-import { fileExtension, formatBytes } from '../../utils/format.js';
-
-const EMPTY = { id: null, title: '', type: 'module', description: '', language: '', year: String(new Date().getFullYear()), is_featured: false };
+import { MATERIAL_TYPES, materialTypeLabel, materialFormat, materialHref, isLinkMaterial } from '../../constants/materials.js';
+import { decodeHtml, formatBytes } from '../../utils/format.js';
+import './ManageOfficers.css';
+import './ManageMaterials.css';
 
 export default function ManageMaterials() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState(EMPTY);
-  const [file, setFile] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [type, setType] = useState('');
+  const [query, setQuery] = useState('');
   const [toast, setToast] = useState(null);
 
   function load() {
-    setLoading(true);
-    api.get('/materials.php').then(res => setItems(res.data.materials || [])).finally(() => setLoading(false));
+    return api.get('/materials.php', { params: { all: 1 } })
+      .then(res => setItems(res.data.materials || []))
+      .finally(() => setLoading(false));
   }
-  useEffect(load, []);
-
-  function openCreate() { setForm(EMPTY); setFile(null); setModalOpen(true); }
-  function openEdit(m) {
-    setForm({
-      id: m.id, title: m.title, type: m.type, description: m.description || '',
-      language: m.language || '', year: m.year ? String(m.year) : '', is_featured: Number(m.is_featured) === 1,
-    });
-    setFile(null);
-    setModalOpen(true);
-  }
+  useEffect(() => { load(); }, []);
 
   async function handleDelete(m) {
-    if (!confirm(`Delete "${m.title}"? The file will be removed too.`)) return;
+    if (!confirm(`Delete "${decodeHtml(m.title)}"? ${isLinkMaterial(m) ? '' : 'The file will be deleted too. '}This cannot be undone.`)) return;
     await api.delete(`/materials.php?id=${m.id}`);
     setToast({ type: 'success', message: 'Material deleted.' });
     load();
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!form.id && !file) {
-      setToast({ type: 'error', message: 'Attach the file people will download.' });
-      return;
-    }
-    setSaving(true);
-    try {
-      const fd = new FormData();
-      ['title', 'type', 'description', 'language', 'year'].forEach(k => fd.append(k, form[k] ?? ''));
-      fd.append('is_featured', form.is_featured ? '1' : '0');
-      if (file) fd.append('file', file);
-      const cfg = { headers: { 'Content-Type': 'multipart/form-data' } };
-      if (form.id) await api.post(`/materials.php?id=${form.id}&_method=PUT`, fd, cfg);
-      else await api.post('/materials.php', fd, cfg);
-      setToast({ type: 'success', message: `Material ${form.id ? 'updated' : 'added'}.` });
-      setModalOpen(false);
-      load();
-    } catch (err) {
-      setToast({ type: 'error', message: err.response?.data?.message || 'Failed to save material.' });
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  const typeLabel = v => MATERIAL_TYPES.find(t => t.value === v)?.label || v;
+  const q = query.trim().toLowerCase();
+  const shown = items.filter(m =>
+    (!type || m.type === type) &&
+    (!q || [m.title, m.description, m.language].some(v => decodeHtml(v || '').toLowerCase().includes(q))));
+  const downloads = items.reduce((n, m) => n + Number(m.download_count || 0), 0);
+  const hidden = items.filter(m => !Number(m.is_published)).length;
+  const typesInUse = MATERIAL_TYPES.filter(t => items.some(m => m.type === t.value));
 
   return (
-    <>
+    <div className="mat">
       <div className="admin-page-header">
-        <h2>Materials</h2>
-        <button className="btn btn-primary" onClick={openCreate}><FaPlus /> Add Material</button>
+        <div>
+          <h2>Materials</h2>
+          <p className="ofc-sub">Modules, reports, posters and policies people can download from the Materials page. Featured items are shown large at the top.</p>
+        </div>
+        <div className="ofc-header-actions">
+          <a className="btn btn-outline btn-sm" href="/materials" target="_blank" rel="noreferrer">View page <FaExternalLinkAlt /></a>
+          <Link to="/admin/materials/new" className="btn btn-primary"><FaPlus /> New material</Link>
+        </div>
       </div>
 
-      <div className="admin-table-wrap">
-        <table className="admin-table">
-          <thead><tr><th>Type</th><th>Title</th><th>Language</th><th>Year</th><th>File</th><th>Featured</th><th>Actions</th></tr></thead>
-          <tbody>
-            {loading && <tr><td colSpan={7}>Loading…</td></tr>}
-            {!loading && items.length === 0 && <tr><td colSpan={7}>No materials yet. Upload modules, reports, or posters for the Materials page.</td></tr>}
-            {items.map(m => (
-              <tr key={m.id}>
-                <td><span className="badge">{typeLabel(m.type)}</span></td>
-                <td>{m.title}</td>
-                <td>{m.language || '—'}</td>
-                <td>{m.year || '—'}</td>
-                <td><a href={assetUrl(m.file_path)} target="_blank" rel="noreferrer">{fileExtension(m.file_path)} · {formatBytes(m.file_size)}</a></td>
-                <td>{Number(m.is_featured) ? <FaStar title="Featured" style={{ color: 'var(--orange)' }} /> : ''}</td>
-                <td>
-                  <button className="icon-btn" onClick={() => openEdit(m)} aria-label="Edit"><FaEdit /></button>
-                  <button className="icon-btn danger" onClick={() => handleDelete(m)} aria-label="Delete"><FaTrash /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {modalOpen && (
-        <div className="modal-overlay" onClick={() => !saving && setModalOpen(false)}>
-          <form className="modal-card" onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
-            <button type="button" className="icon-btn modal-close" onClick={() => setModalOpen(false)}><FaTimes /></button>
-            <h3>{form.id ? 'Edit Material' : 'Add Material'}</h3>
-
-            <div className="form-row">
-              <label>Title</label>
-              <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px', gap: 16 }}>
-              <div className="form-row">
-                <label>Type</label>
-                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                  {MATERIAL_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                </select>
+      {!loading && items.length > 0 && (
+        <div className="alb-toolbar">
+          <div className="ofc-summary">
+            <span><strong>{items.length}</strong> materials</span>
+            <span><strong>{downloads}</strong> downloads</span>
+            {hidden > 0 && <span><strong>{hidden}</strong> hidden</span>}
+          </div>
+          <div className="alb-filters">
+            {typesInUse.length > 1 && (
+              <div className="chips" role="group" aria-label="Filter by type">
+                <button className={`chip ${!type ? 'active' : ''}`} onClick={() => setType('')}>All</button>
+                {typesInUse.map(t => (
+                  <button key={t.value} className={`chip ${type === t.value ? 'active' : ''}`} onClick={() => setType(t.value)}>{t.plural}</button>
+                ))}
               </div>
-              <div className="form-row">
-                <label>Year</label>
-                <input type="number" min="1990" max="2100" value={form.year} onChange={e => setForm({ ...form, year: e.target.value })} />
-              </div>
-            </div>
-            <div className="form-row">
-              <label>Language(s)</label>
-              <input value={form.language} onChange={e => setForm({ ...form, language: e.target.value })} placeholder="e.g. English, Hiligaynon" />
-            </div>
-            <div className="form-row">
-              <label>Short description</label>
-              <textarea rows="3" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
-            </div>
-            <label className="form-check">
-              <input type="checkbox" checked={form.is_featured} onChange={e => setForm({ ...form, is_featured: e.target.checked })} />
-              Feature at the top of the Materials page
+            )}
+            <label className="search-field alb-search">
+              <FaSearch aria-hidden="true" />
+              <span className="sr-only">Search materials</span>
+              <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search materials…" />
             </label>
-            <div className="form-row">
-              <label>File {form.id && '(leave blank to keep current)'}</label>
-              <input type="file" accept=".pdf,.docx,.pptx,.xlsx" onChange={e => setFile(e.target.files[0])} />
-              <span className="hint">PDF, DOCX, PPTX or XLSX up to 30MB.</span>
-            </div>
+          </div>
+        </div>
+      )}
 
-            <div className="modal-actions">
-              <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save Material'}</button>
-            </div>
-          </form>
+      {loading && <div className="admin-loading">Loading…</div>}
+      {!loading && items.length === 0 && (
+        <div className="alb-empty">
+          <FaFileAlt />
+          <p>No materials yet. Upload a module, report or poster, or link to one on Google Drive.</p>
+          <Link to="/admin/materials/new" className="btn btn-primary"><FaPlus /> Add the first material</Link>
+        </div>
+      )}
+      {!loading && items.length > 0 && shown.length === 0 && <p className="ofc-empty">No material matches that filter.</p>}
+
+      {shown.length > 0 && (
+        <div className="admin-table-wrap">
+          <table className="admin-table mat-table">
+            <thead>
+              <tr><th>Material</th><th>Type</th><th>Language</th><th>Year</th><th>File</th><th>Downloads</th><th><span className="sr-only">Actions</span></th></tr>
+            </thead>
+            <tbody>
+              {shown.map(m => {
+                const published = Number(m.is_published) === 1;
+                return (
+                  <tr key={m.id} className={published ? '' : 'is-hidden'}>
+                    <td>
+                      <Link to={`/admin/materials/${m.id}`} className="mat-title">
+                        <strong className="serif">{decodeHtml(m.title)}</strong>
+                        <span className="mat-flags">
+                          {Number(m.is_featured) === 1 && <span className="svc-badge alb-badge-featured"><FaStar /> Featured</span>}
+                          {!published && <span className="svc-badge alb-badge-hidden"><FaEyeSlash /> Hidden</span>}
+                        </span>
+                      </Link>
+                    </td>
+                    <td><span className={`label material-type material-type-${m.type}`}>{materialTypeLabel(m.type)}</span></td>
+                    <td>{decodeHtml(m.language) || '—'}</td>
+                    <td className="mono">{m.year || '—'}</td>
+                    <td className="mono mat-format">
+                      {isLinkMaterial(m) ? <><FaLink /> {materialFormat(m)}</> : <>{materialFormat(m)} · {formatBytes(m.file_size)}</>}
+                    </td>
+                    <td className="mono">{Number(m.download_count || 0)}</td>
+                    <td className="mat-actions">
+                      <Link to={`/admin/materials/${m.id}`} className="icon-btn" aria-label="Edit"><FaEdit /></Link>
+                      <a className="icon-btn" href={materialHref(m)} target="_blank" rel="noreferrer" aria-label="Open file"><FaDownload /></a>
+                      <button type="button" className="icon-btn danger" onClick={() => handleDelete(m)} aria-label="Delete"><FaTrash /></button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 
       <Toast type={toast?.type} message={toast?.message} onClose={() => setToast(null)} />
-    </>
+    </div>
   );
 }

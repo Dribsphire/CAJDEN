@@ -196,9 +196,13 @@ CREATE TABLE materials (
   description TEXT DEFAULT NULL,
   language VARCHAR(100) DEFAULT NULL,              -- e.g. "English, Hiligaynon"
   year SMALLINT DEFAULT NULL,
-  file_path VARCHAR(255) NOT NULL,
+  file_path VARCHAR(255) DEFAULT NULL,             -- uploaded file, or NULL when it's a link
   file_size INT DEFAULT NULL,
+  external_url VARCHAR(500) DEFAULT NULL,          -- e.g. a Google Drive or YouTube link
+  cover_image VARCHAR(255) DEFAULT NULL,
+  download_count INT NOT NULL DEFAULT 0,
   is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

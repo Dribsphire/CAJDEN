@@ -1,45 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FaSearch, FaDownload } from 'react-icons/fa';
-import api, { assetUrl } from '../api/axios';
+import { FaSearch } from 'react-icons/fa';
+import api from '../api/axios';
 import PageHeader from '../components/PageHeader.jsx';
-import { decodeHtml, fileExtension, formatBytes } from '../utils/format.js';
-import logo from '../assets/logo/cajden-seal-256.png';
+import { FeaturedMaterial, MaterialRow } from '../components/MaterialCards.jsx';
 import { MATERIAL_TYPES } from '../constants/materials.js';
 import './Materials.css';
-
-const typeLabel = value => MATERIAL_TYPES.find(t => t.value === value)?.label || value;
-
-function FeaturedMaterial({ item, primary }) {
-  const href = assetUrl(item.file_path);
-  if (primary) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="material-feature material-feature-primary">
-        <div className="material-feature-spine">
-          <span className="mono">{typeLabel(item.type)}</span>
-          <span className="poster">{item.year || fileExtension(item.file_path)}</span>
-          <img src={logo} alt="" />
-        </div>
-        <div className="material-feature-body">
-          <span className="label">Featured</span>
-          <h2 className="serif">{item.title}</h2>
-          {item.description && <p>{decodeHtml(item.description)}</p>}
-          <span className="btn btn-sun btn-sm material-feature-btn">
-            <FaDownload aria-hidden="true" /> {fileExtension(item.file_path)}{item.file_size ? ` · ${formatBytes(item.file_size)}` : ''}
-          </span>
-        </div>
-      </a>
-    );
-  }
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="material-feature material-feature-secondary">
-      <span className="mono">{typeLabel(item.type)}</span>
-      <h2 className="serif">{item.title}</h2>
-      {item.language && (
-        <div className="chips">{item.language.split(',').map(l => <span className="chip" key={l}>{l.trim()}</span>)}</div>
-      )}
-    </a>
-  );
-}
 
 export default function Materials() {
   const [type, setType] = useState('');
@@ -109,24 +74,7 @@ export default function Materials() {
                 <tr><th>Type</th><th>Title</th><th>Language</th><th>Year</th><th>Size</th><th><span className="sr-only">Download</span></th></tr>
               </thead>
               <tbody>
-                {items.map(m => (
-                  <tr key={m.id}>
-                    <td data-label="Type"><span className={`label material-type material-type-${m.type}`}>{typeLabel(m.type)}</span></td>
-                    <td data-label="Title" className="materials-title">
-                      <strong className="serif">{m.title}</strong>
-                      {m.description && <span>{decodeHtml(m.description)}</span>}
-                    </td>
-                    <td data-label="Language">{m.language || '—'}</td>
-                    <td data-label="Year" className="mono">{m.year || '—'}</td>
-                    <td data-label="Size" className="mono">{formatBytes(m.file_size) || fileExtension(m.file_path)}</td>
-                    <td>
-                      <a href={assetUrl(m.file_path)} target="_blank" rel="noopener noreferrer" className="materials-download poster">
-                        Download <FaDownload aria-hidden="true" />
-                        <span className="sr-only"> {m.title}</span>
-                      </a>
-                    </td>
-                  </tr>
-                ))}
+                {items.map(m => <MaterialRow item={m} key={m.id} />)}
               </tbody>
             </table>
           )}

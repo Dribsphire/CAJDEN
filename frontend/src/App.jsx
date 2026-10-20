@@ -38,6 +38,7 @@ const AlbumEditor = lazy(() => import('./pages/admin/AlbumEditor.jsx'));
 const ManageENews = lazy(() => import('./pages/admin/ManageENews.jsx'));
 const ENewsEditor = lazy(() => import('./pages/admin/ENewsEditor.jsx'));
 const ManageMaterials = lazy(() => import('./pages/admin/ManageMaterials.jsx'));
+const MaterialEditor = lazy(() => import('./pages/admin/MaterialEditor.jsx'));
 const ManageMessages = lazy(() => import('./pages/admin/ManageMessages.jsx'));
 const ManageSettings = lazy(() => import('./pages/admin/ManageSettings.jsx'));
 
@@ -99,6 +100,8 @@ export default function App() {
           <Route path="enews/new" element={<ENewsEditor />} />
           <Route path="enews/:id" element={<ENewsEditor />} />
           <Route path="materials" element={<ManageMaterials />} />
+          <Route path="materials/new" element={<MaterialEditor />} />
+          <Route path="materials/:id" element={<MaterialEditor />} />
           <Route path="messages" element={<ManageMessages />} />
           <Route path="settings" element={<ManageSettings />} />
         </Route>

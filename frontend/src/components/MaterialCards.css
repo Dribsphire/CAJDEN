@@ -1,0 +1,47 @@
+/* Material cards, shared by the public Materials page and the admin previews. */
+/* ---------- Featured ---------- */
+.materials-featured { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; margin-bottom: 72px; }
+.materials-featured.single { grid-template-columns: minmax(0, 860px); }
+.material-feature { border: var(--rule); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.material-feature:hover { transform: translate(-3px, -3px); box-shadow: 10px 10px 0 var(--ink); }
+.material-feature-primary { display: flex; background: var(--field); color: var(--paper); box-shadow: var(--shadow-hard); }
+.material-feature-spine {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--sun);
+  color: var(--ink);
+  border-right: var(--rule);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+.material-feature-spine .poster { font-size: 4.2rem; }
+.material-feature-spine img { width: 52px; height: 52px; }
+.material-feature-body { padding: 30px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+.material-feature-body h2 { color: var(--paper); font-size: clamp(1.8rem, 3vw, 2.5rem); margin: 0; }
+.material-feature-body p { color: #d6e6da; margin: 0; }
+.material-feature-btn { align-self: flex-start; }
+
+.material-feature-secondary {
+  background: var(--sky);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+.material-feature-secondary h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); margin: 0; }
+.material-feature-secondary .chip { pointer-events: none; }
+
+.label.material-type-module { background: var(--orange); color: var(--ink); }
+.label.material-type-report { background: var(--field); color: var(--paper); }
+.label.material-type-poster { background: var(--sky); color: var(--ink); }
+
+/* cover image (e.g. a poster or report cover) in place of the year on the spine */
+.material-feature-spine.has-cover { padding: 0; justify-content: flex-start; overflow: hidden; background: var(--paper-2); }
+.material-feature-spine.has-cover img { width: 100%; height: 100%; min-height: 220px; object-fit: cover; }
+.material-feature-secondary .material-feature-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 2px solid var(--ink); }
+.label.material-type-policy { background: var(--ink); color: var(--sun); }
+.materials-title .materials-link-note { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--field); text-transform: uppercase; }

@@ -1,39 +1,3 @@
-/* ---------- Featured ---------- */
-.materials-featured { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; margin-bottom: 72px; }
-.materials-featured.single { grid-template-columns: minmax(0, 860px); }
-.material-feature { border: var(--rule); transition: transform 0.15s ease, box-shadow 0.15s ease; }
-.material-feature:hover { transform: translate(-3px, -3px); box-shadow: 10px 10px 0 var(--ink); }
-.material-feature-primary { display: flex; background: var(--field); color: var(--paper); box-shadow: var(--shadow-hard); }
-.material-feature-spine {
-  width: 240px;
-  flex-shrink: 0;
-  background: var(--sun);
-  color: var(--ink);
-  border-right: var(--rule);
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 18px;
-}
-.material-feature-spine .poster { font-size: 4.2rem; }
-.material-feature-spine img { width: 52px; height: 52px; }
-.material-feature-body { padding: 30px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
-.material-feature-body h2 { color: var(--paper); font-size: clamp(1.8rem, 3vw, 2.5rem); margin: 0; }
-.material-feature-body p { color: #d6e6da; margin: 0; }
-.material-feature-btn { align-self: flex-start; }
-
-.material-feature-secondary {
-  background: var(--sky);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-}
-.material-feature-secondary h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); margin: 0; }
-.material-feature-secondary .chip { pointer-events: none; }
-
 /* ---------- Controls ---------- */
 .materials-controls { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
 
@@ -52,9 +16,6 @@
 .materials-title strong { display: block; font-size: 1.3rem; font-weight: 600; line-height: 1.2; }
 .materials-title span { display: block; margin-top: 4px; color: var(--ink-soft); font-size: 0.9rem; }
 .material-type { white-space: nowrap; }
-.label.material-type-module { background: var(--orange); color: var(--ink); }
-.label.material-type-report { background: var(--field); color: var(--paper); }
-.label.material-type-poster { background: var(--sky); color: var(--ink); }
 .materials-download { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; white-space: nowrap; border-bottom: 3px solid var(--sun); padding-bottom: 2px; }
 .materials-download:hover { background: var(--sun); }
 

@@ -1,0 +1,18 @@
+@import './ManageAlbums.css';
+
+.mat-table tr.is-hidden td { background: var(--paper); }
+.mat-table tr.is-hidden .mat-title strong { opacity: 0.6; }
+.mat-title { display: flex; flex-direction: column; gap: 6px; color: var(--ink); }
+.mat-title strong { font-size: 1.05rem; font-weight: 600; line-height: 1.25; }
+.mat-title:hover strong { text-decoration: underline; }
+.mat-flags { display: flex; gap: 6px; flex-wrap: wrap; }
+.mat-flags:empty { display: none; }
+.mat-format { white-space: nowrap; font-size: 0.75rem; }
+.mat-format svg { color: var(--field); vertical-align: -1px; }
+.mat-actions { white-space: nowrap; text-align: right; }
+
+/* type badge colours, shared with the public Materials page */
+.label.material-type-module { background: var(--orange); color: var(--ink); }
+.label.material-type-report { background: var(--field); color: var(--paper); }
+.label.material-type-poster { background: var(--sky); color: var(--ink); }
+.label.material-type-policy { background: var(--ink); color: var(--sun); }
