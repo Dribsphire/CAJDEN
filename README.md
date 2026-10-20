@@ -67,6 +67,16 @@ ngo-project/
 
 **Default admin login:** username `admin`, password `Admin@12345`
 
+**Forgot the admin login?** Create an admin or reset an existing one's password from
+the command line (it uses the same database settings as the API):
+
+```bash
+php backend/scripts/seed_admin.php <username>              # random password, printed once
+php backend/scripts/seed_admin.php <username> <password>   # set your own (min 8 chars)
+```
+
+The `scripts/` folder is blocked from web access by its `.htaccess`.
+
 ## 2. Frontend setup
 
 ```bash
@@ -131,7 +141,11 @@ these from **Admin → Office Locations**, or directly in `schema.sql` before im
 ## Security features already in place
 
 - Passwords hashed with bcrypt (`password_hash` / `password_verify`)
-- PHP sessions (httpOnly cookies) gate all admin write endpoints via `requireAuth()`
+- PHP sessions gate all admin write endpoints via `requireAuth()`; the session
+  cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` whenever the site runs on HTTPS
+- Login is rate-limited: 5 failed attempts for a username (or 20 from one IP)
+  within 15 minutes locks further attempts until the window passes
+  (`login_attempts` table, created automatically on first login)
 - All SQL uses PDO prepared statements (no raw string concatenation)
 - All text input is sanitized with `htmlspecialchars` before storage
 - Image uploads are validated by extension + real MIME type, capped at 5MB,

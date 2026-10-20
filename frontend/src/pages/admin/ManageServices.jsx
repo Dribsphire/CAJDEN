@@ -3,6 +3,8 @@ import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
 import * as Icons from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { decodeHtml, decodeRecord } from '../../utils/format.js';
+import { resizeImage } from '../../utils/resizeImage.js';
 
 const ICON_OPTIONS = ['FaHandsHelping', 'FaHeartbeat', 'FaGraduationCap', 'FaHandHoldingHeart', 'FaLeaf', 'FaUsers', 'FaHome', 'FaBookReader'];
 const EMPTY = { id: null, title: '', description: '', icon: 'FaHandsHelping' };
@@ -23,7 +25,7 @@ export default function ManageServices() {
   useEffect(load, []);
 
   function openCreate() { setForm(EMPTY); setFile(null); setModalOpen(true); }
-  function openEdit(s) { setForm(s); setFile(null); setModalOpen(true); }
+  function openEdit(s) { setForm(decodeRecord(s)); setFile(null); setModalOpen(true); }
 
   async function handleDelete(id) {
     if (!confirm('Delete this service?')) return;
@@ -40,7 +42,7 @@ export default function ManageServices() {
       fd.append('title', form.title);
       fd.append('description', form.description);
       fd.append('icon', form.icon);
-      if (file) fd.append('image', file);
+      if (file) fd.append('image', await resizeImage(file));
 
       if (form.id) {
         await api.post(`/services.php?id=${form.id}&_method=PUT`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -76,8 +78,8 @@ export default function ManageServices() {
                 <tr key={s.id}>
                   <td>{s.image_path ? <img className="admin-thumb" src={assetUrl(s.image_path)} alt="" /> : <div className="admin-thumb" />}</td>
                   <td><Icon /></td>
-                  <td>{s.title}</td>
-                  <td style={{ maxWidth: 320 }}>{s.description}</td>
+                  <td>{decodeHtml(s.title)}</td>
+                  <td style={{ maxWidth: 320 }}>{decodeHtml(s.description)}</td>
                   <td>
                     <button className="icon-btn" onClick={() => openEdit(s)} aria-label="Edit"><FaEdit /></button>
                     <button className="icon-btn danger" onClick={() => handleDelete(s.id)} aria-label="Delete"><FaTrash /></button>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { FaCalendarAlt, FaUserEdit, FaMapMarkerAlt, FaArrowLeft } from 'react-icons/fa';
 import api, { assetUrl } from '../api/axios';
 import { decodeHtml, formatDate } from '../utils/format.js';
+import { renderPostHtml } from '../utils/postContent.js';
 import './PostDetail.css';
 
 export default function PostDetail() {
@@ -14,23 +15,9 @@ export default function PostDetail() {
   useEffect(() => {
     setLoading(true);
     setError(false);
-    // posts.php looks up by id; we fetch the list filtered client-side by slug
-    // (kept simple for this scaffold — swap for a dedicated ?slug= endpoint if preferred)
-    api.get('/posts.php', { params: { limit: 24 } })
-      .then(async res => {
-        let found = (res.data.posts || []).find(p => p.slug === slug);
-        if (!found) {
-          // fall back: search across more pages/types
-          const all = await Promise.all(['news', 'blog', 'event'].map(t => api.get('/posts.php', { params: { type: t, limit: 24 } })));
-          for (const r of all) {
-            const match = (r.data.posts || []).find(p => p.slug === slug);
-            if (match) { found = match; break; }
-          }
-        }
-        if (!found) { setError(true); return; }
-        const full = await api.get('/posts.php', { params: { id: found.id } });
-        setPost(full.data.post);
-      })
+    // Drafts and scheduled posts are only returned to a logged-in admin.
+    api.get('/posts.php', { params: { slug } })
+      .then(res => setPost(res.data.post))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [slug]);
@@ -49,10 +36,16 @@ export default function PostDetail() {
   }
 
   const typeLabel = { news: 'News', blog: 'Blog', event: 'Event' }[post.type] || post.type;
-  const paragraphs = decodeHtml(post.content).split('\n').map(p => p.trim()).filter(Boolean);
 
   return (
     <article className="post-detail">
+      {!post.is_public && (
+        <div className="post-preview-banner mono" role="status">
+          {post.status === 'draft'
+            ? 'Draft preview: only admins can see this page.'
+            : `Scheduled: goes live on ${formatDate(post.published_at, { month: 'long', day: 'numeric', year: 'numeric' })}. Only admins can see it until then.`}
+        </div>
+      )}
       <header className="post-detail-head">
         <div className="container post-detail-head-inner">
           <Link to="/news-blog" className="mono post-detail-back"><FaArrowLeft aria-hidden="true" /> News, blog &amp; events</Link>
@@ -79,9 +72,8 @@ export default function PostDetail() {
       )}
 
       <div className="container">
-        <div className="post-detail-content">
-          {paragraphs.map((para, i) => <p key={i}>{para}</p>)}
-        </div>
+        {/* renderPostHtml sanitizes with DOMPurify before injecting */}
+        <div className="post-detail-content prose" dangerouslySetInnerHTML={{ __html: renderPostHtml(post.content) }} />
         <div className="post-detail-foot">
           <Link to="/news-blog" className="btn"><FaArrowLeft aria-hidden="true" /> More stories</Link>
         </div>

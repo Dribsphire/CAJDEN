@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
 import api from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { decodeHtml, decodeRecord } from '../../utils/format.js';
 
 const EMPTY = { id: null, org_name: '', sort_order: 0 };
 
@@ -20,7 +21,7 @@ export default function ManagePartners() {
   useEffect(load, []);
 
   function openCreate() { setForm({ ...EMPTY, sort_order: partners.length }); setModalOpen(true); }
-  function openEdit(p) { setForm(p); setModalOpen(true); }
+  function openEdit(p) { setForm(decodeRecord(p)); setModalOpen(true); }
 
   async function handleDelete(id) {
     if (!confirm('Remove this partner organization?')) return;
@@ -56,7 +57,7 @@ export default function ManagePartners() {
       </div>
       <p style={{ fontSize: '0.85rem', color: 'var(--color-charcoal-soft)', marginTop: -10, marginBottom: 20 }}>
         These appear as the row of community/partner organization chips at the bottom of the org chart
-        on the About page (e.g. affiliated barangay associations or federations).
+        on the About page (e.g. affiliated community associations or federations).
       </p>
 
       <div className="admin-table-wrap">
@@ -68,7 +69,7 @@ export default function ManagePartners() {
             {partners.map(p => (
               <tr key={p.id}>
                 <td>{p.sort_order}</td>
-                <td>{p.org_name}</td>
+                <td>{decodeHtml(p.org_name)}</td>
                 <td>
                   <button className="icon-btn" onClick={() => openEdit(p)} aria-label="Edit"><FaEdit /></button>
                   <button className="icon-btn danger" onClick={() => handleDelete(p.id)} aria-label="Delete"><FaTrash /></button>

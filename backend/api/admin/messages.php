@@ -7,6 +7,11 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
+        // Lightweight poll used by the admin sidebar badge.
+        if (isset($_GET['unread_count'])) {
+            $count = (int) $pdo->query('SELECT COUNT(*) FROM contact_messages WHERE is_read = 0')->fetchColumn();
+            respond(true, ['unread' => $count]);
+        }
         $messages = $pdo->query('SELECT * FROM contact_messages ORDER BY sent_at DESC')->fetchAll();
         respond(true, ['messages' => $messages]);
         break;

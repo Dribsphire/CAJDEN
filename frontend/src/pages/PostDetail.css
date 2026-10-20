@@ -18,8 +18,7 @@
 .post-detail-cover img { width: 100%; max-height: 620px; object-fit: cover; }
 
 .post-detail-content { max-width: 720px; margin: clamp(48px, 6vw, 72px) auto 0; }
-.post-detail-content p { font-size: 1.15rem; line-height: 1.8; color: var(--ink); margin-bottom: 1.4em; }
-.post-detail-content p:first-child::first-letter {
+.post-detail-content > p:first-child::first-letter {
   float: left;
   font-family: var(--font-poster);
   font-size: 4.6rem;
@@ -30,3 +29,12 @@
   border: var(--rule);
 }
 .post-detail-foot { max-width: 720px; margin: 48px auto 0; padding-top: 32px; border-top: var(--rule); }
+
+.post-preview-banner {
+  padding: 10px var(--gutter);
+  background: var(--orange);
+  color: var(--ink);
+  border-bottom: var(--rule);
+  font-size: 0.75rem;
+  text-align: center;
+}

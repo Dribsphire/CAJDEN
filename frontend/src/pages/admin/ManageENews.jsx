@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaFilePdf } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { resizeImage } from '../../utils/resizeImage.js';
 import { formatBytes, formatDate } from '../../utils/format.js';
 
 const EMPTY = { id: null, issue_number: '', title: '', period_label: '', published_on: '', summary: '', highlights: '' };
@@ -56,7 +57,7 @@ export default function ManageENews() {
     try {
       const fd = new FormData();
       FIELDS.forEach(k => fd.append(k, form[k] ?? ''));
-      if (cover) fd.append('cover', cover);
+      if (cover) fd.append('cover', await resizeImage(cover));
       if (pdf) fd.append('pdf', pdf);
       const cfg = { headers: { 'Content-Type': 'multipart/form-data' } };
       if (form.id) await api.post(`/enews.php?id=${form.id}&_method=PUT`, fd, cfg);
@@ -160,7 +161,7 @@ export default function ManageENews() {
             </div>
             <div className="form-row">
               <label>In this issue</label>
-              <textarea rows="4" value={form.highlights} onChange={e => setForm({ ...form, highlights: e.target.value })} placeholder={'One story per line, e.g.\nFrom the director: twelve years in the barangays\nMothers lead the health census'} />
+              <textarea rows="4" value={form.highlights} onChange={e => setForm({ ...form, highlights: e.target.value })} placeholder={'One story per line, e.g.\nFrom the director: twelve years in our communities\nMothers lead the health census'} />
               <span className="hint">Shown as the table of contents for the latest issue.</span>
             </div>
             <div className="form-row">

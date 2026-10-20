@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaImages, FaStar, FaRegStar } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { resizeImages } from '../../utils/resizeImage.js';
 import { formatDate } from '../../utils/format.js';
 
 const EMPTY = { id: null, title: '', category: '', description: '', event_date: '', is_featured: false };
@@ -12,7 +13,8 @@ const MULTIPART = { headers: { 'Content-Type': 'multipart/form-data' } };
 async function uploadPhotos(albumId, files, onProgress) {
   for (let i = 0; i < files.length; i += BATCH_SIZE) {
     const fd = new FormData();
-    files.slice(i, i + BATCH_SIZE).forEach(f => fd.append('photos[]', f));
+    const batch = await resizeImages(files.slice(i, i + BATCH_SIZE));
+    batch.forEach(f => fd.append('photos[]', f));
     await api.post(`/album_photos.php?album_id=${albumId}`, fd, MULTIPART);
     onProgress(Math.min(files.length, i + BATCH_SIZE), files.length);
   }

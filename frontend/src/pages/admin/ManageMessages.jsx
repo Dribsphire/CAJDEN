@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaTrash, FaEnvelopeOpen, FaEnvelope, FaTimes } from 'react-icons/fa';
 import api from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { UNREAD_EVENT } from './AdminLayout.jsx';
 
 export default function ManageMessages() {
   const [messages, setMessages] = useState([]);
@@ -11,7 +12,14 @@ export default function ManageMessages() {
 
   function load() {
     setLoading(true);
-    api.get('/admin/messages.php').then(res => setMessages(res.data.messages || [])).finally(() => setLoading(false));
+    api.get('/admin/messages.php')
+      .then(res => {
+        const list = res.data.messages || [];
+        setMessages(list);
+        // Keep the sidebar badge in sync without another request.
+        window.dispatchEvent(new CustomEvent(UNREAD_EVENT, { detail: list.filter(m => !Number(m.is_read)).length }));
+      })
+      .finally(() => setLoading(false));
   }
   useEffect(load, []);
 

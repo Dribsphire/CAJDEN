@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
 import api from '../../api/axios';
 import OfficeMap from '../../components/OfficeMap.jsx';
+import LocationPicker from '../../components/LocationPicker.jsx';
 import Toast from '../../components/Toast.jsx';
+import { decodeHtml, decodeRecord } from '../../utils/format.js';
 
 const EMPTY = { id: null, office_name: '', address: '', contact_number: '', latitude: '', longitude: '', is_main: false };
 
@@ -21,7 +23,7 @@ export default function ManageOffices() {
   useEffect(load, []);
 
   function openCreate() { setForm(EMPTY); setModalOpen(true); }
-  function openEdit(o) { setForm(o); setModalOpen(true); }
+  function openEdit(o) { setForm(decodeRecord(o)); setModalOpen(true); }
 
   async function handleDelete(id) {
     if (!confirm('Remove this office location? It will disappear from the map.')) return;
@@ -32,6 +34,10 @@ export default function ManageOffices() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (form.latitude === '' || form.longitude === '' || Number.isNaN(parseFloat(form.latitude)) || Number.isNaN(parseFloat(form.longitude))) {
+      setToast({ type: 'error', message: 'Place the office on the map first.' });
+      return;
+    }
     setSaving(true);
     try {
       const payload = { ...form, latitude: parseFloat(form.latitude), longitude: parseFloat(form.longitude) };
@@ -69,10 +75,10 @@ export default function ManageOffices() {
             {!loading && offices.length === 0 && <tr><td colSpan={5}>No offices added yet.</td></tr>}
             {offices.map(o => (
               <tr key={o.id}>
-                <td>{o.office_name} {o.is_main ? <span className="badge">Main</span> : null}</td>
-                <td>{o.address}</td>
+                <td>{decodeHtml(o.office_name)} {o.is_main ? <span className="badge">Main</span> : null}</td>
+                <td>{decodeHtml(o.address)}</td>
                 <td>{o.contact_number || '—'}</td>
-                <td>{o.latitude}, {o.longitude}</td>
+                <td className="mono" style={{ fontSize: '0.75rem' }}>{Number(o.latitude).toFixed(4)}, {Number(o.longitude).toFixed(4)}</td>
                 <td>
                   <button className="icon-btn" onClick={() => openEdit(o)} aria-label="Edit"><FaEdit /></button>
                   <button className="icon-btn danger" onClick={() => handleDelete(o.id)} aria-label="Delete"><FaTrash /></button>
@@ -85,7 +91,7 @@ export default function ManageOffices() {
 
       {modalOpen && (
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
-          <form className="modal-card" onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+          <form className="modal-card modal-wide" onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
             <button type="button" className="icon-btn modal-close" onClick={() => setModalOpen(false)}><FaTimes /></button>
             <h3>{form.id ? 'Edit Office' : 'Add Office'}</h3>
 
@@ -102,20 +108,19 @@ export default function ManageOffices() {
               <input value={form.contact_number || ''} onChange={e => setForm({ ...form, contact_number: e.target.value })} />
             </div>
             <div className="form-row">
-              <label>Latitude</label>
-              <input type="number" step="any" value={form.latitude} onChange={e => setForm({ ...form, latitude: e.target.value })} required placeholder="e.g. 10.6713" />
-            </div>
-            <div className="form-row">
-              <label>Longitude</label>
-              <input type="number" step="any" value={form.longitude} onChange={e => setForm({ ...form, longitude: e.target.value })} required placeholder="e.g. 122.9511" />
+              <label>Location on map</label>
+              <LocationPicker
+                lat={form.latitude}
+                lng={form.longitude}
+                addressHint={form.address}
+                onChange={(latitude, longitude) => setForm(f => ({ ...f, latitude, longitude }))}
+                onAddressFound={address => setForm(f => ({ ...f, address }))}
+              />
             </div>
             <div className="form-row" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
               <input type="checkbox" id="is_main" style={{ width: 'auto' }} checked={!!form.is_main} onChange={e => setForm({ ...form, is_main: e.target.checked })} />
               <label htmlFor="is_main" style={{ margin: 0 }}>Set as main office</label>
             </div>
-            <p style={{ fontSize: '0.8rem', color: 'var(--color-charcoal-soft)' }}>
-              Tip: right-click a location on Google Maps to copy exact coordinates.
-            </p>
 
             <div className="modal-actions">
               <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>Cancel</button>

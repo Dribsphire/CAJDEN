@@ -1,0 +1,74 @@
+.loc-picker { display: flex; flex-direction: column; gap: 10px; }
+
+.loc-search { display: flex; gap: 10px; align-items: stretch; }
+.loc-search .search-field { flex: 1; min-width: 0; padding: 9px 12px; border-width: 2px; }
+
+.loc-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--ink);
+  background: var(--white);
+  max-height: 180px;
+  overflow-y: auto;
+}
+.loc-results li + li { border-top: 1px solid var(--paper-2); }
+.loc-results button {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.loc-results button:hover { background: var(--sun); }
+.loc-results svg { margin-top: 3px; flex-shrink: 0; color: var(--orange); }
+
+.loc-map { position: relative; height: 320px; border: 2px solid var(--ink); }
+.loc-map .leaflet-container { cursor: crosshair; }
+.loc-map-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 500;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--sun);
+  padding: 6px 10px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.loc-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
+.loc-coords { font-size: 0.72rem; color: var(--ink-soft); }
+.loc-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.loc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--field);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.loc-link:disabled { opacity: 0.5; }
+
+.loc-manual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.loc-manual label { display: flex; flex-direction: column; gap: 4px; }
+.loc-manual .mono { font-size: 0.68rem; }
+.loc-manual input { padding: 9px 12px; border: 2px solid var(--ink); font: inherit; font-size: 0.9rem; background: var(--white); }
+
+.loc-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); }
+
+/* The admin form styles every input inside .form-row; undo that for the search box's inner field. */
+.loc-picker .search-field input { border: none; padding: 0; background: transparent; box-shadow: none; }

@@ -4,7 +4,7 @@ import { FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import './OfficeMap.css';
 
 // Custom marker icon (default Leaflet icon paths break under bundlers)
-const officeIcon = new L.DivIcon({
+export const officeIcon = new L.DivIcon({
   className: 'office-marker',
   html: `<div class="office-marker-pin"></div>`,
   iconSize: [26, 26],
@@ -13,7 +13,7 @@ const officeIcon = new L.DivIcon({
 });
 
 // Centered roughly over Negros Island (Occidental + Oriental)
-const NEGROS_CENTER = [10.1, 123.05];
+export const NEGROS_CENTER = [10.1, 123.05];
 
 export default function OfficeMap({ offices = [], height = 460 }) {
   if (!offices.length) {

@@ -4,6 +4,11 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 $pdo = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 
+function validCoordinates($lat, $lng) {
+    return is_numeric($lat) && is_numeric($lng)
+        && $lat >= -90 && $lat <= 90 && $lng >= -180 && $lng <= 180;
+}
+
 switch ($method) {
     case 'GET':
         $offices = $pdo->query('SELECT * FROM offices ORDER BY is_main DESC, office_name ASC')->fetchAll();
@@ -23,8 +28,8 @@ switch ($method) {
         if ($name === '' || $address === '' || $lat === null || $lng === null) {
             respond(false, ['message' => 'Office name, address, latitude and longitude are required.'], 422);
         }
-        if (!is_numeric($lat) || !is_numeric($lng)) {
-            respond(false, ['message' => 'Latitude and longitude must be numeric.'], 422);
+        if (!validCoordinates($lat, $lng)) {
+            respond(false, ['message' => 'Place the office on the map (invalid coordinates).'], 422);
         }
 
         $stmt = $pdo->prepare('INSERT INTO offices (office_name, address, contact_number, latitude, longitude, is_main, created_by)
@@ -45,8 +50,12 @@ switch ($method) {
         foreach (['office_name', 'address', 'contact_number'] as $f) {
             if (isset($input[$f])) { $fields[] = "$f = :$f"; $params[$f] = sanitize($input[$f]); }
         }
-        foreach (['latitude', 'longitude'] as $f) {
-            if (isset($input[$f])) { $fields[] = "$f = :$f"; $params[$f] = $input[$f]; }
+        if (isset($input['latitude']) || isset($input['longitude'])) {
+            if (!validCoordinates($input['latitude'] ?? null, $input['longitude'] ?? null)) {
+                respond(false, ['message' => 'Place the office on the map (invalid coordinates).'], 422);
+            }
+            $fields[] = 'latitude = :latitude'; $params['latitude'] = $input['latitude'];
+            $fields[] = 'longitude = :longitude'; $params['longitude'] = $input['longitude'];
         }
         if (isset($input['is_main'])) { $fields[] = 'is_main = :is_main'; $params['is_main'] = $input['is_main'] ? 1 : 0; }
         if (empty($fields)) respond(false, ['message' => 'Nothing to update.'], 422);

@@ -50,7 +50,7 @@ export default function About() {
     <>
       <PageHeader
         title="About"
-        lede="From a small barangay initiative to an island-wide movement for community empowerment."
+        lede="From a small community initiative to an island-wide movement for empowerment."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       />
 

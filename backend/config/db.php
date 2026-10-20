@@ -25,6 +25,9 @@ function getDB() {
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]
             );
+            // Match MySQL's NOW()/CURRENT_TIMESTAMP to PHP's timezone (e.g. +08:00),
+            // so the host server's own timezone doesn't shift publish dates.
+            $pdo->exec("SET time_zone = '" . (new DateTime())->format('P') . "'");
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Database connection failed.']);

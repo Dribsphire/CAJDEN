@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
@@ -17,20 +17,24 @@ import ENews from './pages/ENews.jsx';
 import Materials from './pages/Materials.jsx';
 import NotFound from './pages/NotFound.jsx';
 
-import AdminLogin from './pages/admin/AdminLogin.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import AdminLayout from './pages/admin/AdminLayout.jsx';
-import Dashboard from './pages/admin/Dashboard.jsx';
-import ManagePosts from './pages/admin/ManagePosts.jsx';
-import ManageOfficers from './pages/admin/ManageOfficers.jsx';
-import ManagePartners from './pages/admin/ManagePartners.jsx';
-import ManageOffices from './pages/admin/ManageOffices.jsx';
-import ManageServices from './pages/admin/ManageServices.jsx';
-import ManageAlbums from './pages/admin/ManageAlbums.jsx';
-import ManageENews from './pages/admin/ManageENews.jsx';
-import ManageMaterials from './pages/admin/ManageMaterials.jsx';
-import ManageMessages from './pages/admin/ManageMessages.jsx';
-import ManageSettings from './pages/admin/ManageSettings.jsx';
+
+// Admin screens (and the post editor they pull in) are split into a separate
+// bundle so public visitors never download them.
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.jsx'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard.jsx'));
+const ManagePosts = lazy(() => import('./pages/admin/ManagePosts.jsx'));
+const PostEditor = lazy(() => import('./pages/admin/PostEditor.jsx'));
+const ManageOfficers = lazy(() => import('./pages/admin/ManageOfficers.jsx'));
+const ManagePartners = lazy(() => import('./pages/admin/ManagePartners.jsx'));
+const ManageOffices = lazy(() => import('./pages/admin/ManageOffices.jsx'));
+const ManageServices = lazy(() => import('./pages/admin/ManageServices.jsx'));
+const ManageAlbums = lazy(() => import('./pages/admin/ManageAlbums.jsx'));
+const ManageENews = lazy(() => import('./pages/admin/ManageENews.jsx'));
+const ManageMaterials = lazy(() => import('./pages/admin/ManageMaterials.jsx'));
+const ManageMessages = lazy(() => import('./pages/admin/ManageMessages.jsx'));
+const ManageSettings = lazy(() => import('./pages/admin/ManageSettings.jsx'));
 
 function PublicLayout() {
   return (
@@ -49,6 +53,7 @@ export default function App() {
   return (
     <>
       {showPreloader && <Preloader onFinish={() => setShowPreloader(false)} />}
+      <Suspense fallback={<div className="admin-loading">Loading…</div>}>
       <Routes>
         {/* Public site */}
         <Route element={<PublicLayout />}>
@@ -70,6 +75,8 @@ export default function App() {
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<ManagePosts />} />
+          <Route path="posts/new" element={<PostEditor />} />
+          <Route path="posts/:id" element={<PostEditor />} />
           <Route path="officers" element={<ManageOfficers />} />
           <Route path="partners" element={<ManagePartners />} />
           <Route path="offices" element={<ManageOffices />} />
@@ -81,6 +88,7 @@ export default function App() {
           <Route path="settings" element={<ManageSettings />} />
         </Route>
       </Routes>
+      </Suspense>
     </>
   );
 }

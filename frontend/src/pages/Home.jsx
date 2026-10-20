@@ -46,7 +46,7 @@ export default function Home() {
           <span className="mono home-hero-kicker">Bacolod City · Negros Occidental · Since 2013</span>
           <h1 className="home-hero-title">
             <span className="poster">Lasting change<br />begins in the</span>
-            <span className="poster home-hero-mark">barangay.</span>
+            <span className="poster home-hero-mark">Community.</span>
           </h1>
           <div className="home-hero-foot">
             <p>
@@ -128,7 +128,7 @@ export default function Home() {
           </div>
 
           {loading && <div className="skeleton" style={{ height: 420 }} />}
-          {!loading && !featured && <p className="empty-note">Stories from the barangays will appear here soon.</p>}
+          {!loading && !featured && <p className="empty-note">Stories from our communities will appear here soon.</p>}
 
           {featured && (
             <div className="home-stories-grid">

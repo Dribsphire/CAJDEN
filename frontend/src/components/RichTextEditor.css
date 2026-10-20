@@ -1,0 +1,38 @@
+.rte { border: 2px solid var(--ink); background: var(--white); }
+.rte-loading { min-height: 280px; }
+
+.rte-toolbar {
+  position: sticky;
+  top: -30px; /* stays visible while scrolling inside the modal */
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 6px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+.rte-group { display: flex; gap: 2px; }
+.rte-group-end { margin-left: auto; }
+.rte-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+.rte-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--white); }
+.rte-btn.is-active { background: var(--ink); color: var(--sun); }
+.rte-btn:disabled { opacity: 0.35; cursor: default; }
+.rte-text { font-family: var(--font-poster); font-size: 0.78rem; }
+
+.rte-content { padding: 16px 18px; }
+.rte-content .ProseMirror { min-height: 280px; max-height: 55vh; overflow-y: auto; outline: none; font-size: 1rem; }
+.rte-content .ProseMirror img.ProseMirror-selectednode { outline: 4px solid var(--orange); }
+.rte-content .prose img, .rte-content .ProseMirror img { margin: 1em 0; }
+.rte-status { margin: 0; padding: 6px 18px 10px; font-size: 0.8rem; color: var(--ink-soft); }

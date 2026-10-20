@@ -49,7 +49,7 @@ function SubscribeForm() {
       <div className="container enews-subscribe-inner">
         <div>
           <h2 className="poster">Get it in your inbox.</h2>
-          <p className="serif">New issues straight to your email. No spam, just the barangays.</p>
+          <p className="serif">New issues straight to your email. No spam, just stories from our communities.</p>
         </div>
         <form className="enews-subscribe-form" onSubmit={submit} noValidate>
           <label htmlFor="enews-email" className="sr-only">Email address</label>
@@ -91,7 +91,7 @@ export default function ENews() {
     <>
       <PageHeader
         title="E-News"
-        lede="Our newsletter: what happened in the barangays this season, in our own words."
+        lede="Our newsletter: what happened in our communities this season, in our own words."
         crumbs={[{ label: 'Resources' }, { label: 'E-News' }]}
       />
 

@@ -40,7 +40,7 @@ CREATE TABLE officers (
 
 -- ---------------------------------------------------------
 -- PARTNER ORGANIZATIONS (bottom row of the org chart —
--- e.g. partner barangay associations / community federations)
+-- e.g. partner community associations / federations)
 -- ---------------------------------------------------------
 CREATE TABLE partner_organizations (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -200,6 +200,18 @@ CREATE TABLE materials (
   FULLTEXT KEY ft_materials (title, description)
 ) ENGINE=InnoDB;
 
+-- ---------------------------------------------------------
+-- LOGIN ATTEMPTS (brute-force lockout; api/login.php also
+-- creates this table on demand for older databases)
+-- ---------------------------------------------------------
+CREATE TABLE login_attempts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ip_address VARCHAR(45) NOT NULL,
+  username VARCHAR(50) NOT NULL,
+  attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_ip_time (ip_address, attempted_at)
+) ENGINE=InnoDB;
+
 -- =========================================================
 -- SEED DATA
 -- =========================================================
@@ -251,7 +263,7 @@ INSERT INTO partner_organizations (org_name, sort_order) VALUES
 ('LANTONG', 13), ('BMSEA', 14), ('KKDP', 15);
 
 INSERT INTO services (title, description, icon) VALUES
-('Community Health Outreach', 'Free medical missions and health education for far-flung barangays across Negros.', 'FaHeartbeat'),
+('Community Health Outreach', 'Free medical missions and health education for far-flung communities across Negros.', 'FaHeartbeat'),
 ('Education Support', 'Scholarships and school-supply drives for underprivileged children.', 'FaGraduationCap'),
 ('Livelihood Training', 'Skills training and micro-financing to help families build sustainable income.', 'FaHandsHelping'),
 ('Disaster Relief', 'Emergency response and relief distribution during calamities.', 'FaHandHoldingHeart');
@@ -263,6 +275,6 @@ INSERT INTO offices (office_name, address, contact_number, latitude, longitude, 
 ('Bais City Office', 'Real St., Bais City, Negros Oriental', '+63 35 402 5566', 9.5906, 123.1216, FALSE);
 
 INSERT INTO posts (type, title, slug, category, author, short_description, content, status) VALUES
-('news', 'Foundation Launches New Health Program in Negros Occidental', 'foundation-launches-new-health-program', 'Health', 'Comms Team', 'A new mobile clinic initiative brings free checkups to remote barangays.', 'Full article content goes here...', 'published'),
+('news', 'Foundation Launches New Health Program in Negros Occidental', 'foundation-launches-new-health-program', 'Health', 'Comms Team', 'A new mobile clinic initiative brings free checkups to remote communities.', 'Full article content goes here...', 'published'),
 ('blog', 'Why Community-Led Development Works', 'why-community-led-development-works', 'Insights', 'Maria D. Santos', 'Reflections on a decade of grassroots programs.', 'Full article content goes here...', 'published'),
 ('event', 'Annual Bayanihan Fun Run 2026', 'annual-bayanihan-fun-run-2026', 'Fundraising', 'Events Team', 'Join us for a 5K run supporting scholarship programs.', 'Full event details go here...', 'published');

@@ -7,6 +7,12 @@ export function decodeHtml(text) {
   return el.value;
 }
 
+// Decodes every string field of a record (for admin edit forms), so older
+// entity-encoded values don't get saved back with "&amp;" in them.
+export function decodeRecord(record) {
+  return Object.fromEntries(Object.entries(record).map(([k, v]) => [k, typeof v === 'string' ? decodeHtml(v) : v]));
+}
+
 export function formatBytes(bytes) {
   const n = Number(bytes);
   if (!n) return '';

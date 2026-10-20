@@ -1,39 +1,33 @@
 import { useEffect, useState } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { formatDate } from '../../utils/format.js';
 
-const EMPTY = {
-  id: null, type: 'news', title: '', category: '', author: '',
-  short_description: '', content: '', status: 'published',
-  event_date: '', event_venue: '', cover_image: null,
-};
+const PAGE_SIZE = 20;
 
 export default function ManagePosts() {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState(EMPTY);
-  const [file, setFile] = useState(null);
-  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
 
-  function load() {
+  function load(targetPage = page) {
     setLoading(true);
-    api.get('/posts.php', { params: { limit: 24, status: 'all' } })
-      .then(res => setPosts(res.data.posts || []))
+    api.get('/posts.php', { params: { limit: PAGE_SIZE, page: targetPage, status: 'all' } })
+      .then(res => {
+        const list = res.data.posts || [];
+        const info = res.data.pagination;
+        // Deleting the last post on a page leaves it empty; step back one page.
+        if (!list.length && targetPage > 1) { setPage(targetPage - 1); return; }
+        setPosts(list);
+        setPagination(info);
+      })
       .finally(() => setLoading(false));
   }
-  useEffect(load, []);
-
-  function openCreate() { setForm(EMPTY); setFile(null); setModalOpen(true); }
-
-  async function openEdit(post) {
-    const res = await api.get('/posts.php', { params: { id: post.id } });
-    setForm({ ...EMPTY, ...res.data.post, event_date: res.data.post.event_date?.slice(0, 16) || '' });
-    setFile(null);
-    setModalOpen(true);
-  }
+  useEffect(() => { load(page); }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleDelete(id) {
     if (!confirm('Delete this post? This cannot be undone.')) return;
@@ -42,56 +36,38 @@ export default function ManagePosts() {
     load();
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => {
-        if (v !== null && k !== 'id' && k !== 'cover_image') fd.append(k, v);
-      });
-      if (file) fd.append('cover_image', file);
-
-      if (form.id) {
-        await api.post(`/posts.php?id=${form.id}&_method=PUT`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-      } else {
-        await api.post('/posts.php', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-      }
-      setToast({ type: 'success', message: `Post ${form.id ? 'updated' : 'created'}.` });
-      setModalOpen(false);
-      load();
-    } catch (err) {
-      setToast({ type: 'error', message: err.response?.data?.message || 'Failed to save post.' });
-    } finally {
-      setSaving(false);
-    }
-  }
-
   return (
     <>
       <div className="admin-page-header">
         <h2>News / Blog / Events</h2>
-        <button className="btn btn-primary" onClick={openCreate}><FaPlus /> Add Post</button>
+        <Link to="/admin/posts/new" className="btn btn-primary"><FaPlus /> Add Post</Link>
       </div>
 
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
-            <tr><th>Cover</th><th>Title</th><th>Type</th><th>Category</th><th>Author</th><th>Date</th><th>Actions</th></tr>
+            <tr><th>Cover</th><th>Title</th><th>Type</th><th>Status</th><th>Category</th><th>Author</th><th>Date</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={7}>Loading…</td></tr>}
-            {!loading && posts.length === 0 && <tr><td colSpan={7}>No posts yet. Click "Add Post" to create one.</td></tr>}
+            {loading && <tr><td colSpan={8}>Loading…</td></tr>}
+            {!loading && posts.length === 0 && <tr><td colSpan={8}>No posts yet. Click "Add Post" to create one.</td></tr>}
             {posts.map(p => (
               <tr key={p.id}>
                 <td>{p.cover_image ? <img className="admin-thumb" src={assetUrl(p.cover_image)} alt="" /> : <div className="admin-thumb" />}</td>
-                <td>{p.title}</td>
+                <td><Link to={`/admin/posts/${p.id}`} className="admin-row-link">{p.title}</Link></td>
                 <td><span className="badge">{p.type}</span></td>
+                <td>
+                  {p.status === 'draft'
+                    ? <span className="badge admin-badge-draft">Draft</span>
+                    : new Date(String(p.published_at).replace(' ', 'T')) > new Date() // live at that day's start
+                      ? <span className="badge admin-badge-scheduled">Scheduled</span>
+                      : 'Published'}
+                </td>
                 <td>{p.category || '—'}</td>
                 <td>{p.author || '—'}</td>
-                <td>{new Date(p.published_at).toLocaleDateString()}</td>
+                <td>{formatDate(p.published_at)}</td>
                 <td>
-                  <button className="icon-btn" onClick={() => openEdit(p)} aria-label="Edit"><FaEdit /></button>
+                  <Link to={`/admin/posts/${p.id}`} className="icon-btn" aria-label="Edit"><FaEdit /></Link>
                   <button className="icon-btn danger" onClick={() => handleDelete(p.id)} aria-label="Delete"><FaTrash /></button>
                 </td>
               </tr>
@@ -100,78 +76,12 @@ export default function ManagePosts() {
         </table>
       </div>
 
-      {modalOpen && (
-        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
-          <form className="modal-card" onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
-            <button type="button" className="icon-btn modal-close" onClick={() => setModalOpen(false)}><FaTimes /></button>
-            <h3>{form.id ? 'Edit Post' : 'Add Post'}</h3>
-
-            <div className="form-row">
-              <label>Type</label>
-              <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                <option value="news">News</option>
-                <option value="blog">Blog</option>
-                <option value="event">Event</option>
-              </select>
-            </div>
-
-            <div className="form-row">
-              <label>Title</label>
-              <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
-            </div>
-
-            <div className="form-row">
-              <label>Category</label>
-              <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} />
-            </div>
-
-            <div className="form-row">
-              <label>Author</label>
-              <input value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} />
-            </div>
-
-            {form.type === 'event' && (
-              <>
-                <div className="form-row">
-                  <label>Event Date &amp; Time</label>
-                  <input type="datetime-local" value={form.event_date} onChange={e => setForm({ ...form, event_date: e.target.value })} />
-                </div>
-                <div className="form-row">
-                  <label>Event Venue</label>
-                  <input value={form.event_venue} onChange={e => setForm({ ...form, event_venue: e.target.value })} />
-                </div>
-              </>
-            )}
-
-            <div className="form-row">
-              <label>Short Description</label>
-              <textarea rows="2" value={form.short_description} onChange={e => setForm({ ...form, short_description: e.target.value })} />
-            </div>
-
-            <div className="form-row">
-              <label>Full Content</label>
-              <textarea rows="6" value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} required />
-            </div>
-
-            <div className="form-row">
-              <label>Cover Image {form.cover_image && '(leave blank to keep current)'}</label>
-              <input type="file" accept="image/png, image/jpeg, image/webp" onChange={e => setFile(e.target.files[0])} />
-            </div>
-
-            <div className="form-row">
-              <label>Status</label>
-              <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </select>
-            </div>
-
-            <div className="modal-actions">
-              <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save Post'}</button>
-            </div>
-          </form>
-        </div>
+      {pagination && pagination.total_pages > 1 && (
+        <nav className="admin-pager" aria-label="Posts pages">
+          <button className="btn btn-outline btn-sm" disabled={page <= 1 || loading} onClick={() => setPage(p => p - 1)}>Previous</button>
+          <span>Page {pagination.page} of {pagination.total_pages} · {pagination.total} posts</span>
+          <button className="btn btn-outline btn-sm" disabled={page >= pagination.total_pages || loading} onClick={() => setPage(p => p + 1)}>Next</button>
+        </nav>
       )}
 
       <Toast type={toast?.type} message={toast?.message} onClose={() => setToast(null)} />

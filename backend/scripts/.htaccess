@@ -1,0 +1,2 @@
+# CLI-only maintenance scripts. Never serve them over HTTP.
+Require all denied

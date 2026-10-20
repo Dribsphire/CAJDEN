@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { decodeHtml, decodeRecord } from '../../utils/format.js';
+import { resizeImage } from '../../utils/resizeImage.js';
 import { DEPARTMENTS } from '../../constants/officers.js';
 
 const RANK_OPTIONS = [
@@ -29,7 +31,7 @@ export default function ManageOfficers() {
   useEffect(load, []);
 
   function openCreate() { setForm(EMPTY); setFile(null); setModalOpen(true); }
-  function openEdit(o) { setForm({ ...EMPTY, ...o }); setFile(null); setModalOpen(true); }
+  function openEdit(o) { setForm({ ...EMPTY, ...decodeRecord(o) }); setFile(null); setModalOpen(true); }
 
   async function handleDelete(id) {
     if (!confirm('Remove this officer from the hierarchy?')) return;
@@ -48,7 +50,7 @@ export default function ManageOfficers() {
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => { if (v !== null && k !== 'id') fd.append(k, v); });
-      if (file) fd.append('photo', file);
+      if (file) fd.append('photo', await resizeImage(file, { maxDimension: 800 }));
 
       if (form.id) {
         await api.post(`/officers.php?id=${form.id}&_method=PUT`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -99,8 +101,8 @@ export default function ManageOfficers() {
             {officers.map((o, i) => (
               <tr key={o.id}>
                 <td>{o.photo_path ? <img className="admin-thumb" src={assetUrl(o.photo_path)} alt="" /> : <div className="admin-thumb" />}</td>
-                <td>{o.full_name}</td>
-                <td>{o.position_title}</td>
+                <td>{decodeHtml(o.full_name)}</td>
+                <td>{decodeHtml(o.position_title)}</td>
                 <td>{RANK_OPTIONS.find(r => r.value === Number(o.rank_level))?.label || o.rank_level}</td>
                 <td>{o.department || '—'}</td>
                 <td>
