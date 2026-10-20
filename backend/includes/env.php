@@ -37,6 +37,18 @@ function loadEnv($path) {
     }
 }
 
+// Load backend/.env, preceded by backend/.env.local when the request is
+// served from localhost. loadEnv() never overwrites a key that is already
+// set, so .env.local wins locally while production only ever reads .env —
+// even if .env.local is accidentally uploaded with the rest of the folder.
+function loadAppEnv() {
+    $host = $_SERVER['SERVER_NAME'] ?? '';
+    if (PHP_SAPI === 'cli' || in_array($host, ['localhost', '127.0.0.1'], true)) {
+        loadEnv(__DIR__ . '/../.env.local');
+    }
+    loadEnv(__DIR__ . '/../.env');
+}
+
 // Read an env var with a fallback default, e.g. env('DB_HOST', 'localhost')
 function env($key, $default = null) {
     if (array_key_exists($key, $_ENV)) {

@@ -1,23 +1,23 @@
-.services-full-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
-.service-full-card { overflow: hidden; }
-.service-full-image { position: relative; height: 220px; background: var(--color-sage); }
-.service-full-image img { width: 100%; height: 100%; object-fit: cover; }
-.service-full-placeholder {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.4rem; color: var(--color-forest);
-  background: linear-gradient(135deg, var(--color-sage), #d7e6da);
-}
-.service-full-icon {
-  position: absolute; bottom: -22px; left: 24px;
-  width: 52px; height: 52px; border-radius: 14px;
-  background: var(--color-gold); color: var(--color-forest-dark);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; box-shadow: var(--shadow-soft);
-}
-.service-full-body { padding: 40px 26px 26px; }
-.service-full-body h3 { font-size: 1.25rem; }
+.program-list { display: flex; flex-direction: column; gap: clamp(64px, 8vw, 112px); }
+.program-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.program-row-flip .program-image { order: 2; }
 
-@media (max-width: 760px) {
-  .services-full-grid { grid-template-columns: 1fr; }
+.program-image { position: relative; aspect-ratio: 4 / 3; border: var(--rule); box-shadow: 12px 12px 0 var(--ink); transform: rotate(-1.5deg); background: var(--paper-2); }
+.program-row-flip .program-image { transform: rotate(1.5deg); box-shadow: 12px 12px 0 var(--field); }
+.program-image img { width: 100%; height: 100%; object-fit: cover; }
+.program-image-empty { width: 100%; height: 100%; background: repeating-linear-gradient(45deg, var(--paper-2) 0 12px, var(--paper) 12px 24px); }
+
+.program-body { display: flex; flex-direction: column; gap: 18px; }
+.program-num { color: var(--red); }
+.program-body h2 { font-size: clamp(2rem, 4vw, 3.6rem); overflow-wrap: anywhere; }
+.program-body p { font-size: 1.1rem; line-height: 1.7; color: var(--ink); margin: 0; }
+
+.program-cta { background: var(--ink); color: var(--paper); padding: clamp(56px, 8vw, 96px) 0; }
+.program-cta-inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: end; }
+.program-cta h2 { color: var(--sun); font-size: clamp(2.4rem, 5.4vw, 5rem); }
+.program-cta p { color: #d9d2bf; font-size: 1.1rem; margin-bottom: 24px; }
+
+@media (max-width: 860px) {
+  .program-row, .program-cta-inner { grid-template-columns: 1fr; }
+  .program-row-flip .program-image { order: 0; }
 }

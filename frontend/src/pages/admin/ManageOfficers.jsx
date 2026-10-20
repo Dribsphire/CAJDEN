@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
+import { DEPARTMENTS } from '../../constants/officers.js';
 
 const RANK_OPTIONS = [
   { value: 1, label: 'Board of Trustees Member' },
@@ -9,8 +10,6 @@ const RANK_OPTIONS = [
   { value: 3, label: 'Department Staff' },
 ];
 
-// Must match the DEPARTMENTS list in components/Hierarchy.jsx
-const DEPARTMENTS = ['Finance', 'Program', 'Community Development Worker', 'Volunteers'];
 
 const EMPTY = { id: null, full_name: '', position_title: '', rank_level: 1, department: '', short_description: '', sort_order: 0 };
 

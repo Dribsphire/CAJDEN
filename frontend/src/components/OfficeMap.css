@@ -1,27 +1,30 @@
 .office-map-wrap {
   position: relative;
   z-index: 0;
-  border-radius: var(--radius-lg);
+  border: var(--rule);
+  box-shadow: var(--shadow-hard);
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(31, 77, 61, 0.1);
 }
 
 .office-map-empty {
   display: flex; align-items: center; justify-content: center;
-  background: var(--color-sage); border-radius: var(--radius-lg);
-  color: var(--color-charcoal-soft);
+  border: 3px dashed var(--ink-mute);
+  color: var(--ink-soft);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.2rem;
 }
 
 .office-marker-pin {
-  width: 22px; height: 22px;
-  background: var(--color-forest);
-  border: 3px solid var(--color-gold);
+  width: 24px; height: 24px;
+  background: var(--sun);
+  border: 3px solid var(--ink);
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
 }
 
-.office-popup { font-family: var(--font-body); min-width: 160px; }
-.office-popup strong { font-family: var(--font-display); color: var(--color-forest-dark); display: block; margin-bottom: 6px; }
-.office-popup p { margin: 2px 0; font-size: 0.85rem; color: var(--color-charcoal-soft); display: flex; gap: 6px; align-items: flex-start; }
+.office-popup { font-family: var(--font-sans); min-width: 170px; }
+.office-popup strong { font-family: var(--font-serif); font-size: 1.05rem; color: var(--ink); display: block; margin-bottom: 6px; }
+.office-popup p { margin: 2px 0; font-size: 0.85rem; color: var(--ink-soft); display: flex; gap: 6px; align-items: flex-start; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--ink); }
+.leaflet-popup-content-wrapper { border-radius: 0 !important; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink) !important; }

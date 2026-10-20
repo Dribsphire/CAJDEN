@@ -50,7 +50,7 @@
 }
 .modal-card {
   position: relative; z-index: 10000;
-  background: #fff; border-radius: var(--radius-lg); width: 100%; max-width: 560px;
+  background: #fff; border: var(--rule); width: 100%; max-width: 560px;
   max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: var(--shadow-lift);
 }
 .modal-card h3 { margin-bottom: 20px; }
@@ -62,3 +62,14 @@
   .stat-grid { grid-template-columns: 1fr 1fr; }
 }
 .admin-logo { width: 180px; margin: 0 auto 20px; display: block; }
+/* Wider modal + photo manager for albums */
+.modal-wide { max-width: 920px; }
+.admin-upload-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.admin-hint { font-size: 0.82rem; color: var(--ink-mute); margin: 8px 0 20px; }
+.admin-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+.admin-photo { position: relative; margin: 0; border: 2px solid var(--ink); background: var(--white); display: flex; flex-direction: column; }
+.admin-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.admin-photo input { border: none; border-top: 2px solid var(--ink); padding: 8px; font: inherit; font-size: 0.8rem; background: transparent; }
+.admin-photo input:focus { outline: none; background: #fffbe8; }
+.admin-photo-cover { position: absolute; top: 6px; left: 6px; }
+.admin-photo-actions { position: absolute; top: 4px; right: 4px; display: flex; gap: 2px; background: var(--white); border: 2px solid var(--ink); }

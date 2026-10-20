@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   FaTachometerAlt, FaNewspaper, FaUsers, FaMapMarkedAlt,
   FaHandsHelping, FaEnvelopeOpenText, FaSignOutAlt, FaGlobe, FaSitemap, FaCog,
+  FaImages, FaBookOpen, FaFolderOpen,
 } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext.jsx';
 import './AdminLayout.css';
@@ -14,6 +15,9 @@ const NAV = [
   { to: '/admin/partners', label: 'FBPOs', icon: FaSitemap },
   { to: '/admin/offices', label: 'Office & FBPOs', icon: FaMapMarkedAlt },
   { to: '/admin/services', label: 'Services', icon: FaHandsHelping },
+  { to: '/admin/albums', label: 'Photo Albums', icon: FaImages },
+  { to: '/admin/enews', label: 'E-News', icon: FaBookOpen },
+  { to: '/admin/materials', label: 'Materials', icon: FaFolderOpen },
   { to: '/admin/messages', label: 'Contact Messages', icon: FaEnvelopeOpenText },
   { to: '/admin/settings', label: 'Settings', icon: FaCog },
 ];

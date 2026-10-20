@@ -1,0 +1,87 @@
+/* ---------- Latest issue ---------- */
+.enews-latest { display: grid; grid-template-columns: minmax(0, 440px) 1fr; gap: clamp(40px, 6vw, 80px); align-items: start; margin-bottom: 96px; }
+
+.issue-cover {
+  background: var(--sun);
+  border: var(--rule);
+  box-shadow: 12px 12px 0 var(--ink);
+  transform: rotate(-2deg);
+  display: flex;
+  flex-direction: column;
+}
+.issue-cover-mast { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: var(--rule); }
+.issue-cover-mast .poster { font-size: 1.15rem; }
+.issue-cover-mast .mono { font-size: 0.7rem; }
+.issue-cover-no { font-size: clamp(5rem, 11vw, 7.6rem); line-height: 0.85; padding: 18px 18px 14px; }
+.issue-cover img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-top: var(--rule); border-bottom: var(--rule); }
+.issue-cover-headline { font-size: 1.55rem; font-weight: 600; line-height: 1.12; padding: 16px 18px 22px; }
+
+.enews-latest-info { display: flex; flex-direction: column; gap: 22px; }
+.enews-latest-info > .poster { font-size: clamp(2.4rem, 5vw, 4.4rem); }
+.enews-summary { font-size: 1.1rem; margin: 0; max-width: 640px; }
+.enews-toc { list-style: none; margin: 0; padding: 0; border-top: var(--rule); }
+.enews-toc li { display: flex; gap: 22px; align-items: baseline; padding: 16px 0; border-bottom: 2px solid var(--ink); }
+.enews-toc .mono { color: var(--red); width: 28px; flex-shrink: 0; }
+.enews-toc .serif { font-size: 1.35rem; font-weight: 600; line-height: 1.2; }
+.enews-actions { display: flex; gap: 18px; flex-wrap: wrap; }
+
+/* ---------- Archive ---------- */
+.enews-archive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.enews-past { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.enews-past-cover {
+  aspect-ratio: 4 / 4.4;
+  border: var(--rule);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+a.enews-past:hover .enews-past-cover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard); }
+.enews-past-cover .poster { font-size: clamp(2.6rem, 5vw, 4.4rem); line-height: 0.9; overflow-wrap: anywhere; }
+.enews-past-cover .mono { font-size: 0.72rem; }
+.tint-field { background: var(--field); color: var(--paper); }
+.tint-field .mono { color: var(--sun); }
+.tint-red { background: var(--red); color: var(--paper); }
+.tint-red .mono { color: var(--sun); }
+.tint-sky { background: var(--sky); }
+.tint-orange { background: var(--orange); }
+.tint-sun { background: var(--sun); }
+.enews-past-title { font-size: 1.25rem; font-weight: 600; line-height: 1.2; }
+.enews-past-file { font-size: 0.7rem; color: var(--ink-mute); }
+
+/* ---------- Subscribe ---------- */
+.enews-subscribe { background: var(--ink); color: var(--paper); padding: clamp(56px, 7vw, 80px) 0; }
+.enews-subscribe-inner { display: flex; justify-content: space-between; align-items: center; gap: 36px; flex-wrap: wrap; }
+.enews-subscribe h2 { color: var(--sun); font-size: clamp(2.4rem, 5.4vw, 4.6rem); }
+.enews-subscribe .serif { font-style: italic; font-size: 1.4rem; color: var(--paper); margin: 12px 0 0; }
+.enews-subscribe-form { flex: 0 1 540px; }
+.enews-subscribe-row { display: flex; }
+.enews-subscribe-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 18px;
+  font: inherit;
+  font-size: 1rem;
+  border: 3px solid var(--sun);
+  border-right: none;
+  background: var(--paper);
+  color: var(--ink);
+}
+.enews-subscribe-row input:focus { outline: none; background: var(--white); }
+.enews-subscribe-row .btn { box-shadow: none; border-color: var(--sun); }
+.enews-subscribe-status { margin: 14px 0 0; font-size: 0.95rem; }
+.enews-subscribe-status.ok { color: var(--sun); }
+.enews-subscribe-status.error { color: #ff9a8f; }
+
+@media (max-width: 1000px) {
+  .enews-archive-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  .enews-latest { grid-template-columns: 1fr; }
+  .issue-cover { max-width: 420px; }
+}
+@media (max-width: 520px) {
+  .enews-subscribe-row { flex-direction: column; gap: 12px; }
+  .enews-subscribe-row input { border-right: 3px solid var(--sun); }
+}

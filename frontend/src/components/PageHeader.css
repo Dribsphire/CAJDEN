@@ -1,0 +1,28 @@
+.page-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding-top: clamp(44px, 6vw, 72px);
+}
+.page-header-crumbs { color: var(--sun); margin-bottom: 18px; }
+.page-header-crumbs a:hover { text-decoration: underline; }
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+  padding-bottom: clamp(32px, 4vw, 48px);
+}
+.page-header-title { color: var(--paper); overflow-wrap: anywhere; }
+.page-header-title-xl { font-size: clamp(3.2rem, 11.5vw, 10.5rem); }
+.page-header-title-lg { font-size: clamp(2.6rem, 8vw, 7.5rem); }
+.page-header-title-md { font-size: clamp(2.2rem, 5.6vw, 5rem); }
+
+.page-header-lede {
+  max-width: 400px;
+  font-size: 1.12rem;
+  line-height: 1.55;
+  color: #d9d2bf;
+  margin: 0;
+}

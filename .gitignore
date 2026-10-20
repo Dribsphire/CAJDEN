@@ -5,6 +5,7 @@ backend/.env
 backend/.env.local
 frontend/.env
 frontend/.env.local
+frontend/.env.development.local
 .env
 .env.local
 
@@ -26,9 +27,15 @@ dist/
 backend/uploads/officers/*
 backend/uploads/services/*
 backend/uploads/posts/*
+backend/uploads/albums/*
+backend/uploads/enews/*
+backend/uploads/materials/*
 !backend/uploads/officers/.gitkeep
 !backend/uploads/services/.gitkeep
 !backend/uploads/posts/.gitkeep
+!backend/uploads/albums/.gitkeep
+!backend/uploads/enews/.gitkeep
+!backend/uploads/materials/.gitkeep
 !backend/uploads/.htaccess
 
 # =========================================================

@@ -1,12 +1,39 @@
-.post-card { display: block; overflow: hidden; }
-.post-card-image { position: relative; height: 190px; background: var(--color-sage); }
+.post-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: var(--rule);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.post-card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard); }
+.post-card-image { position: relative; aspect-ratio: 16 / 10; background: var(--paper-2); border-bottom: var(--rule); }
 .post-card-image img { width: 100%; height: 100%; object-fit: cover; }
-.post-card-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--color-sage), #d7e6da); }
-.post-card-type { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.92); }
+.post-card-placeholder { width: 100%; height: 100%; background: var(--paper-2); }
+.post-card-type {
+  position: absolute;
+  top: 0; left: 0;
+  background: var(--sun);
+  border-right: var(--rule);
+  border-bottom: var(--rule);
+  padding: 6px 10px;
+  font-size: 0.7rem;
+}
+.post-card-event .post-card-type { background: var(--orange); }
+.post-card-blog .post-card-type { background: var(--sky); }
 
-.post-card-body { padding: 20px; }
-.post-card-category { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-gold-dark); }
-.post-card-body h3 { font-size: 1.08rem; margin: 6px 0 8px; }
-.post-card-body p { font-size: 0.9rem; margin: 0 0 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.post-card-meta { display: flex; gap: 16px; font-size: 0.78rem; color: var(--color-charcoal-soft); }
-.post-card-meta span { display: flex; align-items: center; gap: 5px; }
+.post-card-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.post-card-meta { color: var(--red); font-size: 0.7rem; }
+.post-card-body h3 { font-size: 1.4rem; line-height: 1.15; margin: 0; }
+.post-card-body p {
+  font-size: 0.95rem;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-card-author { margin-top: auto; padding-top: 6px; font-size: 0.68rem; color: var(--ink-mute); }
+
+.post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+@media (max-width: 960px) { .post-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .post-grid { grid-template-columns: 1fr; } }

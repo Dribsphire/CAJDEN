@@ -4,7 +4,7 @@
 // =========================================================
 // Credentials come from backend/.env (see .env.example for the template).
 require_once __DIR__ . '/../includes/env.php';
-loadEnv(__DIR__ . '/../.env');
+loadAppEnv();
 
 define('DB_HOST', env('DB_HOST', 'localhost'));
 define('DB_NAME', env('DB_NAME', 'ngo_db'));

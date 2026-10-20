@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaCalendarAlt, FaUserEdit, FaMapMarkerAlt, FaArrowLeft } from 'react-icons/fa';
 import api, { assetUrl } from '../api/axios';
+import { decodeHtml, formatDate } from '../utils/format.js';
 import './PostDetail.css';
 
 export default function PostDetail() {
@@ -35,37 +36,54 @@ export default function PostDetail() {
   }, [slug]);
 
   if (loading) {
-    return <div className="container" style={{ padding: '80px 24px' }}><div className="skeleton" style={{ height: 400 }} /></div>;
+    return <div className="container section"><div className="skeleton" style={{ height: 400 }} /></div>;
   }
 
   if (error || !post) {
     return (
-      <div className="container" style={{ padding: '100px 24px', textAlign: 'center' }}>
-        <h2>Post not found</h2>
-        <Link to="/news-blog" className="btn btn-primary" style={{ marginTop: 20 }}>Back to News &amp; Blog</Link>
+      <div className="container section">
+        <p className="empty-note">That story could not be found.</p>
+        <p style={{ marginTop: 28 }}><Link to="/news-blog" className="btn"><FaArrowLeft aria-hidden="true" /> Back to News</Link></p>
       </div>
     );
   }
 
-  const date = new Date(post.published_at || post.event_date);
+  const typeLabel = { news: 'News', blog: 'Blog', event: 'Event' }[post.type] || post.type;
+  const paragraphs = decodeHtml(post.content).split('\n').map(p => p.trim()).filter(Boolean);
 
   return (
     <article className="post-detail">
-      <div className="post-detail-cover">
-        {post.cover_image ? <img src={assetUrl(post.cover_image)} alt={post.title} /> : <div className="post-detail-placeholder" />}
-      </div>
-      <div className="container post-detail-body"><br />
-          <Link to="/news-blog" className="post-detail-back"><FaArrowLeft /> Back to News &amp; Blog</Link>
-          <span className="badge" style={{ marginLeft: 12 }}>{post.type}</span>
-
-        <h1>{post.title}</h1>
-        <div className="post-detail-meta">
-          <span><FaCalendarAlt /> {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-          {post.author && <span><FaUserEdit /> {post.author}</span>}
-          {post.type === 'event' && post.event_venue && <span><FaMapMarkerAlt /> {post.event_venue}</span>}
+      <header className="post-detail-head">
+        <div className="container post-detail-head-inner">
+          <Link to="/news-blog" className="mono post-detail-back"><FaArrowLeft aria-hidden="true" /> News, blog &amp; events</Link>
+          <span className="label">{[typeLabel, post.category].filter(Boolean).join(' · ')}</span>
+          <h1>{post.title}</h1>
+          {post.short_description && <p className="post-detail-dek">{decodeHtml(post.short_description)}</p>}
+          <div className="post-detail-meta mono">
+            <span><FaCalendarAlt aria-hidden="true" /> {formatDate(post.published_at, { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+            {post.author && <span><FaUserEdit aria-hidden="true" /> {post.author}</span>}
+            {post.type === 'event' && post.event_date && (
+              <span><FaCalendarAlt aria-hidden="true" /> Event: {formatDate(post.event_date, { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
+            )}
+            {post.type === 'event' && post.event_venue && <span><FaMapMarkerAlt aria-hidden="true" /> {post.event_venue}</span>}
+          </div>
         </div>
+      </header>
+
+      {post.cover_image && (
+        <div className="container">
+          <figure className="post-detail-cover">
+            <img src={assetUrl(post.cover_image)} alt="" />
+          </figure>
+        </div>
+      )}
+
+      <div className="container">
         <div className="post-detail-content">
-          {post.content.split('\n').map((para, i) => para.trim() && <p key={i}>{para}</p>)}
+          {paragraphs.map((para, i) => <p key={i}>{para}</p>)}
+        </div>
+        <div className="post-detail-foot">
+          <Link to="/news-blog" className="btn"><FaArrowLeft aria-hidden="true" /> More stories</Link>
         </div>
       </div>
     </article>

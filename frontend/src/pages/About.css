@@ -1,30 +1,50 @@
-.page-hero {
-  background: var(--color-forest);
-  color: #fff;
-  padding: 64px 0;
+/* ---------- History ---------- */
+.about-history { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.about-history-side { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 22px; }
+.about-history-title { font-size: clamp(2.2rem, 4.2vw, 3.8rem); line-height: 1.02; margin: 0; }
+.about-history-body p { font-size: 1.12rem; line-height: 1.75; color: var(--ink); margin-bottom: 1.3em; }
+.about-dropcap::first-letter {
+  float: left;
+  font-family: var(--font-poster);
+  font-size: 5.2rem;
+  line-height: 0.82;
+  padding: 8px 12px 4px;
+  margin: 6px 14px 0 0;
+  background: var(--sun);
+  border: var(--rule);
 }
-.page-hero .eyebrow { color: var(--color-gold); }
-.page-hero h1 { color: #fff; font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 10px; }
-.page-hero p { color: #cfe0d6; max-width: 560px; margin: 0; }
 
-.about-history { max-width: 780px; }
-.about-history h2 { font-size: 1.6rem; }
+/* ---------- Mission / vision ---------- */
+.about-mv { display: grid; grid-template-columns: 1fr 1fr; border-top: var(--rule); border-bottom: var(--rule); }
+.about-mv-block { padding: clamp(40px, 6vw, 80px) var(--gutter); display: flex; flex-direction: column; gap: 22px; }
+.about-mv-block p { font-family: var(--font-serif); font-style: italic; font-size: clamp(1.35rem, 2.2vw, 1.9rem); line-height: 1.3; margin: 0; }
+.about-mv-mission { background: var(--sun); border-right: var(--rule); }
+.about-mv-mission p { color: var(--ink); }
+.about-mv-vision { background: var(--field); }
+.about-mv-vision p { color: var(--paper); }
 
-.mv-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
-.mv-card { padding: 34px 28px; text-align: left; }
-.mv-card svg { font-size: 1.8rem; color: var(--color-gold-dark); margin-bottom: 14px; }
-.mv-card h3 { margin-bottom: 10px; }
+/* ---------- Values ---------- */
+.values-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--rule); border-left: var(--rule); }
+.value-cell { padding: 28px; border-right: var(--rule); border-bottom: var(--rule); display: flex; flex-direction: column; gap: 14px; background: var(--white); }
+.value-num { color: var(--red); }
+.value-icon { font-size: 1.8rem; color: var(--orange); }
+.value-cell h3 { font-size: 1.6rem; margin: 0; }
+.value-cell p { margin: 0; font-size: 0.98rem; }
 
-.values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-.value-card { padding: 26px 20px; text-align: center; }
-.value-card svg { font-size: 1.6rem; color: var(--color-forest); margin-bottom: 12px; }
-.value-card h4 { font-size: 1rem; margin-bottom: 6px; }
-.value-card p { font-size: 0.85rem; }
+/* ---------- Leadership ---------- */
+.about-leadership { background: var(--paper-2); }
+.about-leadership-title { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: 14px; }
+.about-leadership-lede { max-width: 420px; margin: 0; }
 
-@media (max-width: 900px) {
-  .mv-cards { grid-template-columns: 1fr; }
-  .values-grid { grid-template-columns: 1fr 1fr; }
+@media (max-width: 960px) {
+  .about-history { grid-template-columns: 1fr; }
+  .about-history-side { position: static; }
+  .values-row { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 560px) {
-  .values-grid { grid-template-columns: 1fr; }
+@media (max-width: 720px) {
+  .about-mv { grid-template-columns: 1fr; }
+  .about-mv-mission { border-right: none; border-bottom: var(--rule); }
+}
+@media (max-width: 520px) {
+  .values-row { grid-template-columns: 1fr; }
 }

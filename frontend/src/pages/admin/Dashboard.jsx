@@ -11,6 +11,10 @@ const STAT_LABELS = [
   ['total_officers', 'Total Officers'],
   ['total_messages', 'Total Messages'],
   ['unread_messages', 'Unread Messages'],
+  ['total_albums', 'Photo Albums'],
+  ['total_enews', 'E-News Issues'],
+  ['total_materials', 'Materials'],
+  ['total_subscribers', 'E-News Subscribers'],
 ];
 
 export default function Dashboard() {

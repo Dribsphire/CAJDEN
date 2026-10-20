@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import api from '../api/axios';
 import PostCard from '../components/PostCard.jsx';
+import PageHeader from '../components/PageHeader.jsx';
 import './NewsBlog.css';
 
 const TABS = [
@@ -29,55 +30,54 @@ export default function NewsBlog() {
 
   useEffect(() => {
     setLoading(true);
-    api.get('/posts.php', { params: { type: type || undefined, search: debouncedSearch || undefined, page, limit: 6 } })
+    api.get('/posts.php', { params: { type: type || undefined, search: debouncedSearch || undefined, page, limit: 9 } })
       .then(res => { setPosts(res.data.posts || []); setPagination(res.data.pagination); })
+      .catch(() => { setPosts([]); setPagination(null); })
       .finally(() => setLoading(false));
   }, [type, debouncedSearch, page]);
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container">
-          <span className="eyebrow">Updates</span>
-          <h1>News, Blog &amp; Events</h1>
-          <p>Stories, announcements, and upcoming activities from across Negros Island.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="News"
+        lede="Stories, announcements, and upcoming activities from across Negros Island."
+        crumbs={[{ label: 'Home', to: '/' }, { label: 'News, blog & events' }]}
+      />
 
       <section className="section">
         <div className="container">
           <div className="news-controls">
-            <div className="news-tabs">
+            <div className="chips" role="group" aria-label="Filter by type">
               {TABS.map(t => (
                 <button
                   key={t.value}
-                  className={`news-tab ${type === t.value ? 'active' : ''}`}
+                  className={`chip ${type === t.value ? 'active' : ''}`}
                   onClick={() => setType(t.value)}
                 >
                   {t.label}
                 </button>
               ))}
             </div>
-            <div className="news-search">
-              <FaSearch />
+            <label className="search-field">
+              <FaSearch aria-hidden="true" />
+              <span className="sr-only">Search news and blog posts</span>
               <input
-                type="text"
+                type="search"
                 placeholder="Search articles…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                aria-label="Search news and blog posts"
               />
-            </div>
+            </label>
           </div>
 
           {loading && (
             <div className="post-grid">
-              {[1, 2, 3, 4, 5, 6].map(i => <div className="skeleton" style={{ height: 300 }} key={i} />)}
+              {[1, 2, 3].map(i => <div className="skeleton" style={{ height: 380 }} key={i} />)}
             </div>
           )}
 
           {!loading && posts.length === 0 && (
-            <p style={{ padding: '40px 0' }}>No posts found. Try a different search or filter.</p>
+            <p className="empty-note">No posts found. Try a different search or filter.</p>
           )}
 
           {!loading && posts.length > 0 && (
@@ -87,11 +87,11 @@ export default function NewsBlog() {
           )}
 
           {pagination && pagination.total_pages > 1 && (
-            <div className="pagination">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
-              <span>Page {pagination.page} of {pagination.total_pages}</span>
-              <button disabled={page >= pagination.total_pages} onClick={() => setPage(p => p + 1)}>Next</button>
-            </div>
+            <nav className="pagination" aria-label="Pagination">
+              <button className="btn btn-sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
+              <span className="mono">Page {pagination.page} of {pagination.total_pages}</span>
+              <button className="btn btn-sm" disabled={page >= pagination.total_pages} onClick={() => setPage(p => p + 1)}>Next</button>
+            </nav>
           )}
         </div>
       </section>

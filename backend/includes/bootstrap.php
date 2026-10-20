@@ -5,7 +5,7 @@
 // =========================================================
 
 require_once __DIR__ . '/env.php';
-loadEnv(__DIR__ . '/../.env');
+loadAppEnv();
 
 // ---- CORS ----
 // Must exactly match the URL your React app runs on (set in backend/.env).

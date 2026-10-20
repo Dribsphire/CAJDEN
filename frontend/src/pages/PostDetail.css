@@ -1,13 +1,32 @@
-.post-detail-cover { height: 380px; background: var(--color-sage); }
-.post-detail-cover img { width: 100%; height: 100%; object-fit: cover; }
-.post-detail-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--color-sage), #d7e6da); }
+.post-detail { padding-bottom: clamp(64px, 8vw, 110px); }
+.post-detail-head { background: var(--ink); color: var(--paper); padding: clamp(40px, 6vw, 72px) 0 clamp(120px, 14vw, 180px); }
+.post-detail-head-inner { display: flex; flex-direction: column; gap: 20px; max-width: calc(980px + 2 * var(--gutter)); }
+.post-detail-back { color: var(--sun); display: inline-flex; align-items: center; gap: 8px; }
+.post-detail-back:hover { text-decoration: underline; }
+.post-detail-head h1 { color: var(--paper); font-size: clamp(2.2rem, 5vw, 4.4rem); line-height: 1.02; margin: 0; }
+.post-detail-dek { font-family: var(--font-serif); font-style: italic; font-size: clamp(1.15rem, 2vw, 1.5rem); color: #d9d2bf; margin: 0; max-width: 760px; }
+.post-detail-meta { display: flex; gap: 10px 26px; flex-wrap: wrap; font-size: 0.72rem; color: #c8c1ad; }
+.post-detail-meta span { display: inline-flex; align-items: center; gap: 7px; }
 
-.post-detail-body { max-width: 760px; padding-top: 40px; padding-bottom: 80px; }
-.post-detail-back {
-  display: inline-flex; align-items: center; gap: 8px;
-  color: var(--color-forest); font-weight: 600; font-size: 0.9rem; margin-bottom: 20px;
+.post-detail-cover {
+  margin: calc(-1 * clamp(90px, 11vw, 140px)) auto 0;
+  max-width: 1100px;
+  border: var(--rule);
+  box-shadow: 12px 12px 0 var(--sun);
+  background: var(--paper-2);
 }
-.post-detail-body h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin: 12px 0 16px; }
-.post-detail-meta { display: flex; gap: 22px; flex-wrap: wrap; font-size: 0.88rem; color: var(--color-charcoal-soft); margin-bottom: 30px; }
-.post-detail-meta span { display: flex; align-items: center; gap: 6px; }
-.post-detail-content p { margin-bottom: 18px; font-size: 1.02rem; }
+.post-detail-cover img { width: 100%; max-height: 620px; object-fit: cover; }
+
+.post-detail-content { max-width: 720px; margin: clamp(48px, 6vw, 72px) auto 0; }
+.post-detail-content p { font-size: 1.15rem; line-height: 1.8; color: var(--ink); margin-bottom: 1.4em; }
+.post-detail-content p:first-child::first-letter {
+  float: left;
+  font-family: var(--font-poster);
+  font-size: 4.6rem;
+  line-height: 0.82;
+  padding: 6px 10px 2px;
+  margin: 6px 12px 0 0;
+  background: var(--sun);
+  border: var(--rule);
+}
+.post-detail-foot { max-width: 720px; margin: 48px auto 0; padding-top: 32px; border-top: var(--rule); }

@@ -1,23 +1,27 @@
-.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; align-items: start; }
-.contact-info h3 { font-size: 1.15rem; margin-bottom: 18px; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(36px, 5vw, 64px); align-items: start; }
 
-.contact-info-list { list-style: none; padding: 0; margin: 0 0 40px; display: flex; flex-direction: column; gap: 14px; }
-.contact-info-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--color-charcoal-soft); }
-.contact-info-list svg { color: var(--color-gold-dark); margin-top: 4px; flex-shrink: 0; }
-.contact-info-list a:hover { color: var(--color-forest); }
-
-.contact-form { background: var(--color-white); border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--shadow-soft); }
-.form-row { margin-bottom: 18px; display: flex; flex-direction: column; gap: 6px; }
-.form-row label { font-size: 0.85rem; font-weight: 600; color: var(--color-forest-dark); }
-.form-row input, .form-row textarea {
-  padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid #e0e6e1;
-  font-family: inherit; font-size: 0.95rem; resize: vertical;
+.contact-info-list { list-style: none; padding: 0; margin: 20px 0 48px; display: flex; flex-direction: column; border-top: var(--rule); }
+.contact-info-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
-.form-row input:focus, .form-row textarea:focus { border-color: var(--color-forest); outline: none; }
-.form-error { color: var(--color-danger); font-size: 0.8rem; }
+.contact-info-list svg { color: var(--orange); margin-top: 5px; flex-shrink: 0; font-size: 1rem; }
+.contact-info-list a:hover { text-decoration: underline; }
 
-.contact-map h3 { font-size: 1.15rem; margin-bottom: 18px; }
+.contact-form { background: var(--white); border: var(--rule); box-shadow: 10px 10px 0 var(--ink); padding: clamp(22px, 3vw, 34px); }
+.contact-form h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 24px; }
+
+.contact-map { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 120px; }
 
 @media (max-width: 900px) {
   .contact-grid { grid-template-columns: 1fr; }
+  .contact-map { position: static; }
 }

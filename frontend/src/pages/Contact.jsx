@@ -3,6 +3,7 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook, FaPaperPlane } from 'r
 import api from '../api/axios';
 import { useSettings } from '../hooks/useSettings.js';
 import OfficeMap from '../components/OfficeMap.jsx';
+import PageHeader from '../components/PageHeader.jsx';
 import Toast from '../components/Toast.jsx';
 import './Contact.css';
 
@@ -48,27 +49,25 @@ export default function Contact() {
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container">
-          <span className="eyebrow">Get in Touch</span>
-          <h1>Contact Us</h1>
-          <p>Have a question, want to volunteer, or need assistance? We'd love to hear from you.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="Contact"
+        lede="Have a question, want to volunteer, or need assistance? We'd love to hear from you."
+        crumbs={[{ label: 'Home', to: '/' }, { label: 'Contact' }]}
+      />
 
       <section className="section">
         <div className="container contact-grid">
-          <div className="contact-info fade-in">
-            <h3>Reach Us Directly</h3>
+          <div className="contact-info">
+            <span className="label">Reach us directly</span>
             <ul className="contact-info-list">
-              <li><FaMapMarkerAlt /> <span>{settings.org_address || 'Rizal St., Bacolod City, Negros Occidental'}</span></li>
-              <li><FaPhone /> <span>{settings.org_phone || '+63 34 123 4567'}</span></li>
-              <li><FaEnvelope /> <span>{settings.org_email || 'info@cajden.org'}</span></li>
-              {settings.facebook_url && <li><FaFacebook /> <a href={settings.facebook_url} target="_blank" rel="noreferrer">Follow us on Facebook</a></li>}
+              <li><FaMapMarkerAlt aria-hidden="true" /> <span>{settings.org_address || 'Bacolod City, Negros Occidental'}</span></li>
+              {settings.org_phone && <li><FaPhone aria-hidden="true" /> <a href={`tel:${settings.org_phone.replace(/[^\d+]/g, '')}`}>{settings.org_phone}</a></li>}
+              {settings.org_email && <li><FaEnvelope aria-hidden="true" /> <a href={`mailto:${settings.org_email}`}>{settings.org_email}</a></li>}
+              {settings.facebook_url && <li><FaFacebook aria-hidden="true" /> <a href={settings.facebook_url} target="_blank" rel="noreferrer">Follow us on Facebook</a></li>}
             </ul>
 
             <form className="contact-form" onSubmit={handleSubmit} noValidate>
-              <h3>Send a Message</h3>
+              <h2 className="poster">Send a message</h2>
               <div className="form-row">
                 <label htmlFor="full_name">Full Name</label>
                 <input
@@ -109,14 +108,14 @@ export default function Contact() {
                 {errors.message && <span className="form-error">{errors.message}</span>}
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={submitting}>
-                {submitting ? 'Sending…' : <>Send Message <FaPaperPlane /></>}
+              <button type="submit" className="btn btn-sun" disabled={submitting}>
+                {submitting ? 'Sending…' : <>Send message <FaPaperPlane aria-hidden="true" /></>}
               </button>
             </form>
           </div>
 
-          <div className="contact-map fade-in">
-            <h3>Our Office and FBPOs</h3>
+          <div className="contact-map">
+            <span className="label">Our offices &amp; FBPOs</span>
             <OfficeMap offices={offices} height={560} />
           </div>
         </div>

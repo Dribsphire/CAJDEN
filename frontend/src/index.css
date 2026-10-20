@@ -1,32 +1,55 @@
 /* =========================================================
-   DESIGN TOKENS — CAJDEN Inc. Website
-   Palette drawn from the island itself: sugarcane-field green,
-   sunrise-over-Kanlaon gold, and volcanic charcoal.
+   DESIGN TOKENS — CAJDEN Inc. Website ("Hablon Poster")
+   Colours are lifted straight from the CAJDEN seal: sunrise
+   yellow and orange, the green of the cane fields, the sky over
+   the water, all held together by a black ink outline. The woven
+   hablon bands (components/Hablon.jsx) reuse the same palette.
    ========================================================= */
 :root {
-  --color-forest: #1f4d3d;       /* primary — deep sugarcane green */
-  --color-forest-dark: #143329;
-  --color-gold: #e2a33d;         /* accent — Negros sunrise gold */
-  --color-gold-dark: #c6862a;
-  --color-cream: #faf8f2;        /* background */
-  --color-sage: #e9f0e8;         /* soft section background */
-  --color-charcoal: #202b26;     /* text */
-  --color-charcoal-soft: #566159;
-  --color-white: #ffffff;
-  --color-danger: #c0392b;
-  --color-success: #2f7a4d;
+  --ink: #14130f;
+  --ink-soft: #4f4a3e;
+  --ink-mute: #6d6757;
+  --paper: #f4eedf;
+  --paper-2: #eae1cb;
+  --white: #fffdf7;
+  --sun: #f6c21c;
+  --orange: #e86a1c;
+  --field: #0f6b3a;
+  --field-dark: #0a4a28;
+  --sky: #7cc8e6;
+  --red: #c8352b;
 
-  --font-display: 'Poppins', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-poster: 'Archivo Black', 'Arial Black', sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-sans: 'Work Sans', system-ui, sans-serif;
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
+  --rule: 3px solid var(--ink);
+  --shadow-hard: 6px 6px 0 var(--ink);
 
-  --shadow-soft: 0 8px 24px rgba(31, 77, 61, 0.08);
-  --shadow-lift: 0 16px 40px rgba(31, 77, 61, 0.14);
+  --container-width: 1320px;
+  --gutter: clamp(16px, 4.4vw, 64px);
 
-  --container-width: 1180px;
+  /* Legacy names still used by the admin panel and older components —
+     mapped onto the new palette so everything stays in one system. */
+  --color-forest: var(--field);
+  --color-forest-dark: var(--ink);
+  --color-gold: var(--sun);
+  --color-gold-dark: var(--orange);
+  --color-cream: var(--paper);
+  --color-sage: var(--paper-2);
+  --color-charcoal: var(--ink);
+  --color-charcoal-soft: var(--ink-soft);
+  --color-white: var(--white);
+  --color-danger: var(--red);
+  --color-success: var(--field);
+  --font-display: var(--font-serif);
+  --font-body: var(--font-sans);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --shadow-soft: 4px 4px 0 rgba(20, 19, 15, 0.12);
+  --shadow-lift: var(--shadow-hard);
 }
 
 * { box-sizing: border-box; }
@@ -34,111 +57,222 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: var(--font-body);
-  color: var(--color-charcoal);
-  background: var(--color-cream);
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
-  position: relative;
-}
-
-/* Site-wide logo watermark. Sits behind all content; opaque section
-   backgrounds (like .section-sage) will still cover it, which is fine —
-   it shows through on the plain cream areas between sections. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: url('./assets/logo/cajdencolored.png');
-  background-repeat: no-repeat;
-  background-position: center 15%;
-  background-size: min(55vw, 560px);
-  opacity: 0.05;
-  pointer-events: none;
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--color-forest-dark);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--ink);
   margin: 0 0 0.5em;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
-p { line-height: 1.7; color: var(--color-charcoal-soft); }
+p { line-height: 1.65; color: var(--ink-soft); margin: 0 0 1em; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 button { font-family: inherit; cursor: pointer; }
+::selection { background: var(--sun); color: var(--ink); }
 
 .container {
-  max-width: var(--container-width);
+  max-width: calc(var(--container-width) + 2 * var(--gutter));
   margin: 0 auto;
-  padding: 0 24px;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
 }
 
-.section { padding: 84px 0; }
-.section-sage { background: var(--color-sage); }
+.section { padding: clamp(64px, 9vw, 120px) 0; }
+.section-sage { background: var(--paper-2); }
 
-.eyebrow {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+/* ---------- Type helpers ---------- */
+.poster {
+  font-family: var(--font-poster);
+  font-weight: 400;
   text-transform: uppercase;
-  color: var(--color-gold-dark);
-  margin-bottom: 12px;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  margin: 0;
 }
+.serif { font-family: var(--font-serif); }
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.label {
+  display: inline-block;
+  align-self: flex-start;
+  width: fit-content;
+  padding: 4px 8px;
+  background: var(--ink);
+  color: var(--sun);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.eyebrow { /* kept for older markup */
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+.highlight { background: linear-gradient(transparent 58%, var(--sun) 58%); }
 
-.section-heading { max-width: 620px; margin-bottom: 44px; }
-.section-heading h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.section-heading { max-width: 640px; margin-bottom: 44px; }
+.section-heading h2 { font-size: clamp(2rem, 4.4vw, 3.6rem); }
 .section-heading p { font-size: 1.05rem; margin-top: 10px; }
 
+.section-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.section-bar .poster { font-size: clamp(2.4rem, 6vw, 5.5rem); }
+
+.grid-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-bottom: var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 36px;
+}
+.grid-head .poster { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+
+/* ---------- Buttons: boxy, inked, hard shadow ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 13px 26px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 22px;
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--ink);
+  background: var(--white);
+  border: var(--rule);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
 }
-.btn-primary { background: var(--color-forest); color: var(--color-white); }
-.btn-primary:hover { background: var(--color-forest-dark); transform: translateY(-2px); box-shadow: var(--shadow-lift); }
-.btn-gold { background: var(--color-gold); color: var(--color-forest-dark); }
-.btn-gold:hover { background: var(--color-gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lift); }
-.btn-outline { background: transparent; color: var(--color-forest); border: 1.5px solid var(--color-forest); }
-.btn-outline:hover { background: var(--color-forest); color: var(--color-white); }
-.btn:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-  outline: 3px solid var(--color-gold);
-  outline-offset: 2px;
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+.btn:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 var(--ink); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.btn svg { font-size: 0.9em; }
+.btn-gold, .btn-sun { background: var(--sun); }
+.btn-orange { background: var(--orange); }
+.btn-primary { background: var(--ink); color: var(--sun); }
+.btn-outline { background: transparent; }
+.btn-ghost-light { background: transparent; color: var(--paper); border-color: var(--paper); box-shadow: none; }
+.btn-ghost-light:hover { background: var(--paper); color: var(--ink); box-shadow: none; transform: none; }
+.btn-sm { padding: 9px 14px; font-size: 0.75rem; box-shadow: 4px 4px 0 var(--ink); }
+.on-dark .btn { box-shadow: 6px 6px 0 var(--orange); }
+.on-dark .btn-ghost-light { box-shadow: none; }
+
+.btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
 }
 
-.card {
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* ---------- Chips (filters) ---------- */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  padding: 9px 14px;
+  border: 2px solid var(--ink);
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: background 0.15s ease;
 }
-.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.chip:hover { background: var(--sun); }
+.chip.active, .chip[aria-pressed='true'] { background: var(--ink); color: var(--sun); }
+
+/* ---------- Search field ---------- */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: var(--rule);
+  background: var(--white);
+  min-width: min(100%, 340px);
+}
+.search-field svg { color: var(--ink-mute); flex-shrink: 0; }
+.search-field input { border: none; outline: none; flex: 1; font: inherit; font-size: 0.95rem; background: transparent; min-width: 0; }
+
+/* ---------- Cards / badges (shared with admin) ---------- */
+.card {
+  background: var(--white);
+  border: var(--rule);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+a.card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard); }
 
 .badge {
   display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--color-sage);
-  color: var(--color-forest);
-  text-transform: capitalize;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  background: var(--ink);
+  color: var(--sun);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
+.empty-note {
+  border: 3px dashed var(--ink-mute);
+  padding: 48px 28px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+/* ---------- Forms (public contact + admin modals) ---------- */
+.form-row { margin-bottom: 18px; display: flex; flex-direction: column; gap: 6px; }
+.form-row label { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink); }
+.form-row input, .form-row textarea, .form-row select {
+  padding: 12px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  resize: vertical;
+}
+.form-row input:focus, .form-row textarea:focus, .form-row select:focus { outline: none; box-shadow: 4px 4px 0 var(--sun); }
+.form-row .hint { font-size: 0.8rem; color: var(--ink-mute); }
+.form-check { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font-size: 0.92rem; }
+.form-check input { width: 18px; height: 18px; accent-color: var(--field); }
+.form-error { color: var(--red); font-size: 0.8rem; }
+
 .skeleton {
-  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background: linear-gradient(90deg, var(--paper-2) 25%, #f2ead7 50%, var(--paper-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
-  border-radius: var(--radius-sm);
 }
 @keyframes shimmer {
   0% { background-position: 200% 0; }
@@ -151,10 +285,11 @@ button { font-family: inherit; cursor: pointer; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-@media (max-width: 640px) {
-  .section { padding: 56px 0; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }

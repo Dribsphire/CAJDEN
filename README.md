@@ -98,6 +98,29 @@ update `VITE_API_BASE` and `VITE_UPLOADS_BASE` in `frontend/.env`, and
    shouldn't be served since it doesn't have a `.php` extension, but some
    shared hosts serve dotfiles by default — worth a quick check).
 
+### Updating an existing install: Resources pages (Photos, E-News, Materials)
+
+The Photos, E-News and Materials pages need five new tables. A fresh import of
+`schema.sql` already includes them; for a database that is already live, run
+`backend/migrations/2026_10_resources.sql` once in phpMyAdmin → SQL. Then
+upload the new `backend/api/*.php` files and make sure `backend/uploads/albums`,
+`uploads/enews` and `uploads/materials` exist and are writable. Content is
+managed from **Admin → Photo Albums / E-News / Materials**.
+
+PDF and document uploads are capped at 30MB and album photos at 10MB each, so
+the host's `upload_max_filesize` / `post_max_size` must allow at least that.
+
+### Local development against XAMPP
+
+To work locally without editing the production `.env` files:
+
+- `backend/.env.local` overrides `backend/.env`, but **only** when the API is
+  served from `localhost`, so an accidental upload can't affect the live site.
+- `frontend/.env.development.local` overrides `frontend/.env` for
+  `npm run dev` only; `npm run build` still uses `frontend/.env`.
+
+Both files are gitignored.
+
 ## Notes on the Negros Island office map
 
 The Leaflet map (`OfficeMap.jsx`) is centered on Negros Island by default and

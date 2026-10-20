@@ -13,6 +13,10 @@ $counts = [
     'total_messages' => $pdo->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn(),
     'unread_messages' => $pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_read = 0")->fetchColumn(),
     'total_officers' => $pdo->query("SELECT COUNT(*) FROM officers")->fetchColumn(),
+    'total_albums' => $pdo->query("SELECT COUNT(*) FROM photo_albums")->fetchColumn(),
+    'total_enews' => $pdo->query("SELECT COUNT(*) FROM enews_issues")->fetchColumn(),
+    'total_materials' => $pdo->query("SELECT COUNT(*) FROM materials")->fetchColumn(),
+    'total_subscribers' => $pdo->query("SELECT COUNT(*) FROM enews_subscribers")->fetchColumn(),
 ];
 
 $recentMessages = $pdo->query('SELECT id, full_name, subject, sent_at, is_read FROM contact_messages ORDER BY sent_at DESC LIMIT 5')->fetchAll();

@@ -1,96 +1,144 @@
-import { FaUser } from 'react-icons/fa';
 import { assetUrl } from '../api/axios';
+import { decodeHtml } from '../utils/format.js';
+import { DEPARTMENTS } from '../constants/officers.js';
 import './Hierarchy.css';
 
-// Fixed department buckets rendered on the chart, left to right.
-// Officer records with rank_level = 3 must set `department` to one of these.
-const DEPARTMENTS = ['Finance', 'Program', 'Community Development Worker', 'Volunteers'];
+const HONORIFICS = /^(rev|fr|msgr|sr|br|ms|mr|mrs|dr|engr|atty|hon|ma)\.?$/i;
+const AVATAR_TINTS = ['tint-sun', 'tint-sky', 'tint-orange', 'tint-field'];
 
-function PersonCard({ officer, size = 'md' }) {
+// "MS. MARIBEL GONZALES, RSW, MSSW" -> { name: "MS. MARIBEL GONZALES", credentials: "RSW, MSSW" }
+function splitName(fullName) {
+  const text = decodeHtml(fullName || '').trim();
+  const comma = text.indexOf(',');
+  if (comma === -1) return { name: text, credentials: '' };
+  return { name: text.slice(0, comma).trim(), credentials: text.slice(comma + 1).trim() };
+}
+
+// Initials from the first and last real name words, skipping titles like REV. / FR. / DR.
+function initials(name) {
+  const words = name.split(/\s+/).filter(w => w && !HONORIFICS.test(w) && !/^(jr|sr|ii|iii|iv)\.?$/i.test(w));
+  if (!words.length) return '?';
+  const first = words[0][0];
+  const last = words.length > 1 ? words[words.length - 1][0] : '';
+  return (first + last).toUpperCase();
+}
+
+function Avatar({ officer, name, index }) {
+  if (officer.photo_path) {
+    return <img className="org-avatar" src={assetUrl(officer.photo_path)} alt="" loading="lazy" />;
+  }
   return (
-    <div className={`org-person-card org-person-${size}`}>
-      <div className="org-person-photo">
-        {officer.photo_path ? (
-          <img src={assetUrl(officer.photo_path)} alt={officer.full_name} />
-        ) : (
-          <FaUser aria-hidden="true" />
-        )}
-      </div>
-      <div className="org-person-text">
-        <strong>{officer.full_name}</strong>
-        <span>{officer.position_title}</span>
-      </div>
-    </div>
+    <span className={`org-avatar org-avatar-initials ${AVATAR_TINTS[index % AVATAR_TINTS.length]}`} aria-hidden="true">
+      {initials(name)}
+    </span>
   );
 }
 
+function PersonCard({ officer, index = 0, highlight = false }) {
+  const { name, credentials } = splitName(officer.full_name);
+  return (
+    <li className={`org-person ${highlight ? 'org-person-highlight' : ''}`}>
+      <Avatar officer={officer} name={name} index={index} />
+      <div className="org-person-text">
+        <strong>{name}</strong>
+        {credentials && <span className="org-person-cred">{credentials}</span>}
+        <span className="org-person-role">{decodeHtml(officer.position_title)}</span>
+      </div>
+    </li>
+  );
+}
+
+function Connector() {
+  return <span className="org-connector" aria-hidden="true" />;
+}
+
 export default function Hierarchy({ officers = [], partners = [] }) {
-  const boardMembers = officers.filter(o => Number(o.rank_level) === 1);
-  const executiveDirector = officers.find(o => Number(o.rank_level) === 2);
-  const departmentStaff = officers.filter(o => Number(o.rank_level) === 3);
+  const board = officers.filter(o => Number(o.rank_level) === 1);
+  const director = officers.find(o => Number(o.rank_level) === 2);
+  const staff = officers.filter(o => Number(o.rank_level) === 3);
+
+  // Known departments first in their fixed order, then any others found in the data,
+  // so a staff member with an unexpected department still shows up.
+  const extra = [...new Set(staff.map(s => s.department || 'Staff'))].filter(d => !DEPARTMENTS.includes(d));
+  const departments = [...DEPARTMENTS, ...extra]
+    .map(name => ({ name, people: staff.filter(s => (s.department || 'Staff') === name) }))
+    .filter(d => d.people.length > 0);
 
   if (!officers.length) {
-    return <p>Officer information is not available yet.</p>;
+    return <p className="empty-note">Officer information is not available yet.</p>;
   }
 
   return (
     <div className="org-chart">
-      {/* BOARD OF TRUSTEES + branching board members */}
-      <div className="org-trustees-row">
-        <div className="org-box org-box-trustees">BOARD OF TRUSTEES</div>
-        {boardMembers.length > 0 && (
-          <>
-            <span className="org-stem" aria-hidden="true" />
-            <div className="org-branch-right">
-              {boardMembers.map(m => <PersonCard officer={m} size="sm" key={m.id} />)}
-            </div>
-          </>
-        )}
-      </div>
+      {board.length > 0 && (
+        <section className="org-tier org-board" aria-labelledby="org-board-title">
+          <h3 id="org-board-title" className="org-tier-label poster">
+            Board of{' '}<br />Trustees
+            <span className="mono">{board.length} members</span>
+          </h3>
+          <ul className="org-board-grid">
+            {board.map((o, i) => <PersonCard officer={o} index={i} highlight={i === 0} key={o.id} />)}
+          </ul>
+        </section>
+      )}
 
-      {/* Connector down to Executive Director */}
-      {executiveDirector && (
+      {director && (
         <>
-          <span className="org-connector" aria-hidden="true" />
-          <div className="org-ed-wrap">
-            <PersonCard officer={executiveDirector} size="lg" />
-          </div>
+          {board.length > 0 && <Connector />}
+          <section className="org-tier org-director" aria-label="Executive Director">
+            {director.photo_path
+              ? <img className="org-director-photo" src={assetUrl(director.photo_path)} alt="" />
+              : <span className="org-director-photo org-avatar-initials tint-sun" aria-hidden="true">{initials(splitName(director.full_name).name)}</span>}
+            <div className="org-director-text">
+              <span className="label">{decodeHtml(director.position_title)}</span>
+              <strong className="serif">{splitName(director.full_name).name}</strong>
+              {splitName(director.full_name).credentials && (
+                <span className="mono">{splitName(director.full_name).credentials}</span>
+              )}
+            </div>
+          </section>
         </>
       )}
 
-      {/* Connector + bus line down to departments */}
-      <span className="org-connector" aria-hidden="true" />
-      <div className="org-departments-row">
-        {DEPARTMENTS.map(dept => {
-          const staff = departmentStaff.filter(o => o.department === dept);
-          return (
-            <div className="org-department" key={dept}>
-              <div className="org-box org-box-dept">{dept}</div>
-              {staff.length > 0 && (
-                <>
-                  <span className="org-stem" aria-hidden="true" />
-                  <div className="org-branch-right org-branch-right-dept">
-                    {staff.map(s => <PersonCard officer={s} size="sm" key={s.id} />)}
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {departments.length > 0 && (
+        <>
+          <Connector />
+          <section
+            className="org-tier org-departments"
+            style={{ '--cols': Math.min(departments.length, 4) }}
+            aria-label="Departments"
+          >
+            {departments.map(d => (
+              <div className="org-dept" key={d.name}>
+                <h3 className="org-dept-head">
+                  <span className="poster">{d.name}</span>
+                  <span className="mono">{d.people.length}</span>
+                </h3>
+                <ul className="org-dept-list">
+                  {d.people.map((o, i) => <PersonCard officer={o} index={i + 1} key={o.id} />)}
+                </ul>
+              </div>
+            ))}
+          </section>
+        </>
+      )}
 
-      {/* Partner / community organizations */}
       {partners.length > 0 && (
         <>
-          <span className="org-connector" aria-hidden="true" />
-          <div className="org-partners">
-            <span className="org-partners-label">Partner Community Organizations</span>
-            <div className="org-partners-row">
-              {partners.map(p => (
-                <span className="org-partner-chip" key={p.id}>{p.org_name}</span>
+          <section className="org-tier org-partners" aria-labelledby="org-partners-title">
+            <h3 id="org-partners-title" className="org-tier-label poster">
+              Partner{' '}<br />FBPOs
+              <span className="mono">{partners.length} organizations</span>
+            </h3>
+            <ol className="org-partner-grid">
+              {partners.map((p, i) => (
+                <li key={p.id}>
+                  <span className="mono">{String(i + 1).padStart(2, '0')}</span>
+                  <strong className="poster">{decodeHtml(p.org_name)}</strong>
+                </li>
               ))}
-            </div>
-          </div>
+            </ol>
+          </section>
         </>
       )}
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import logo from '../assets/logo/cajdencolored.png';
+import logo from '../assets/logo/cajden-seal-256.png';
 import './Preloader.css';
 
 /**

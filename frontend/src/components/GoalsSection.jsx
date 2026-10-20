@@ -43,50 +43,32 @@ const GOALS = [
   },
 ];
 
-function LedgerEntry({ goal, index }) {
-  return (
-    <article className="ledger-entry">
-      <div className="entry-seal" aria-hidden="true">
-        <span>{goal.numeral}</span>
-      </div>
-      <div className="entry-body">
-        <h3 className="entry-title">
-          <span className="entry-number">Goal {index + 1}</span>
-          {goal.title}
-        </h3>
-        <p className="entry-text">{goal.text}</p>
-      </div>
-    </article>
-  );
-}
-
 export default function GoalsSection() {
   return (
-    <section className="goals-section" id="goals" aria-labelledby="goals-title">
-      <div className="goals-header">
-        <span className="goals-eyebrow">Founding Charter</span>
-        <h2 id="goals-title" className="goals-title">
-          Eight Commitments We Keep
-        </h2>
-        <p className="goals-lede">
-          Since our founding, these eight goals have guided every program we
-          run and every community we walk beside — set down here as the
-          organization's standing charter.
-        </p>
-      </div>
+    <section className="goals-section section" id="goals" aria-labelledby="goals-title">
+      <div className="container">
+        <div className="goals-header">
+          <div>
+            <span className="label">Founding charter</span>
+            <h2 id="goals-title" className="goals-title">
+              Eight commitments<br /><em>we keep.</em>
+            </h2>
+          </div>
+          <p className="goals-lede">
+            Since our founding, these eight goals have guided every program we
+            run and every community we walk beside.
+          </p>
+        </div>
 
-      <div className="ledger">
-        <div className="ledger-page ledger-page--left">
-          {GOALS.slice(0, 4).map((goal, i) => (
-            <LedgerEntry key={goal.numeral} goal={goal} index={i} />
+        <ol className="charter">
+          {GOALS.map(goal => (
+            <li className="charter-cell" key={goal.numeral}>
+              <span className="poster charter-numeral" aria-hidden="true">{goal.numeral}</span>
+              <h3 className="charter-title">{goal.title}</h3>
+              <p className="charter-text">{goal.text}</p>
+            </li>
           ))}
-        </div>
-        <div className="ledger-spine" aria-hidden="true" />
-        <div className="ledger-page ledger-page--right">
-          {GOALS.slice(4).map((goal, i) => (
-            <LedgerEntry key={goal.numeral} goal={goal} index={i + 4} />
-          ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
