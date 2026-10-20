@@ -1,0 +1,35 @@
+/* Previews mimic the homepage "What we do" row and the Programs page block. */
+.pe-panel > h3 svg { margin-right: 6px; vertical-align: -1px; }
+
+.svc-prev-home {
+  display: grid;
+  grid-template-columns: 26px 1fr 72px;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  background: var(--field);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+}
+.svc-prev-home .svc-prev-num { color: var(--sun); font-size: 0.68rem; align-self: start; padding-top: 3px; }
+.svc-prev-home strong { display: block; font-size: 1.05rem; line-height: 1; color: var(--paper); overflow-wrap: anywhere; }
+.svc-prev-home p {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #d6e6da;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.svc-prev-home img { width: 72px; height: 48px; object-fit: cover; border: 2px solid var(--ink); transform: rotate(2deg); }
+
+.svc-prev-page { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--white); border: 2px solid var(--ink); }
+.svc-prev-page img, .svc-prev-noimg { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 2px solid var(--ink); }
+.svc-prev-noimg { display: block; background: repeating-linear-gradient(45deg, var(--paper) 0 10px, var(--paper-2) 10px 20px); }
+.svc-prev-label { color: var(--red); font-size: 0.65rem; }
+.svc-prev-page > strong { font-size: 1.2rem; line-height: 1; overflow-wrap: anywhere; }
+.svc-prev-body { font-size: 0.78rem; max-height: 220px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 75%, transparent); mask-image: linear-gradient(#000 75%, transparent); }
+.svc-prev-body p { line-height: 1.5; }
+.svc-prev-body img { margin: 0.6em 0; }

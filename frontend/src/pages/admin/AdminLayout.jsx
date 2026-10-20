@@ -20,7 +20,7 @@ const NAV = [
   { to: '/admin/officers', label: 'Officers Positions', icon: FaUsers },
   { to: '/admin/partners', label: 'FBPOs', icon: FaSitemap },
   { to: '/admin/offices', label: 'Office & FBPOs', icon: FaMapMarkedAlt },
-  { to: '/admin/services', label: 'Services', icon: FaHandsHelping },
+  { to: '/admin/services', label: 'Programs', icon: FaHandsHelping },
   { to: '/admin/albums', label: 'Photo Albums', icon: FaImages },
   { to: '/admin/enews', label: 'E-News', icon: FaBookOpen },
   { to: '/admin/materials', label: 'Materials', icon: FaFolderOpen },

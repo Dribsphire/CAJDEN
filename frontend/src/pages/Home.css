@@ -107,6 +107,7 @@
 }
 .home-program-num { color: var(--sun); }
 .home-program h3 { color: var(--paper); font-size: clamp(1.8rem, 3.6vw, 3.4rem); }
+.home-program h3 a:hover { color: var(--sun); }
 .home-program p {
   color: #d6e6da;
   margin: 0;

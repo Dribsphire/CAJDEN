@@ -1,27 +1,12 @@
 import { assetUrl } from '../api/axios';
 import { decodeHtml } from '../utils/format.js';
 import { DEPARTMENTS } from '../constants/officers.js';
+import { splitName, initials } from '../utils/people.js';
 import './Hierarchy.css';
 
-const HONORIFICS = /^(rev|fr|msgr|sr|br|ms|mr|mrs|dr|engr|atty|hon|ma)\.?$/i;
 const AVATAR_TINTS = ['tint-sun', 'tint-sky', 'tint-orange', 'tint-field'];
-
-// "MS. MARIBEL GONZALES, RSW, MSSW" -> { name: "MS. MARIBEL GONZALES", credentials: "RSW, MSSW" }
-function splitName(fullName) {
-  const text = decodeHtml(fullName || '').trim();
-  const comma = text.indexOf(',');
-  if (comma === -1) return { name: text, credentials: '' };
-  return { name: text.slice(0, comma).trim(), credentials: text.slice(comma + 1).trim() };
-}
-
-// Initials from the first and last real name words, skipping titles like REV. / FR. / DR.
-function initials(name) {
-  const words = name.split(/\s+/).filter(w => w && !HONORIFICS.test(w) && !/^(jr|sr|ii|iii|iv)\.?$/i.test(w));
-  if (!words.length) return '?';
-  const first = words[0][0];
-  const last = words.length > 1 ? words[words.length - 1][0] : '';
-  return (first + last).toUpperCase();
-}
+// FBPOs without a photo get their acronym on a coloured tile instead.
+const PARTNER_TINTS = ['tint-field', 'tint-sun', 'tint-sky', 'tint-orange', 'tint-ink'];
 
 function Avatar({ officer, name, index }) {
   if (officer.photo_path) {
@@ -130,14 +115,26 @@ export default function Hierarchy({ officers = [], partners = [] }) {
               Partner{' '}<br />FBPOs
               <span className="mono">{partners.length} organizations</span>
             </h3>
-            <ol className="org-partner-grid">
+            <ul className="org-partner-grid">
               {partners.map((p, i) => (
-                <li key={p.id}>
-                  <span className="mono">{String(i + 1).padStart(2, '0')}</span>
-                  <strong className="poster">{decodeHtml(p.org_name)}</strong>
+                <li key={p.id} className="org-partner">
+                  {p.photo_path ? (
+                    <>
+                      <img src={assetUrl(p.photo_path)} alt={`${decodeHtml(p.org_name)} members`} loading="lazy" />
+                      <strong className="poster">{decodeHtml(p.org_name)}</strong>
+                    </>
+                  ) : (
+                    // No photo: the acronym itself fills the tile, sized to its length so it never breaks mid-word.
+                    <strong
+                      className={`poster org-partner-mark ${PARTNER_TINTS[i % PARTNER_TINTS.length]}`}
+                      style={{ '--len': Math.max(4, decodeHtml(p.org_name).length) }}
+                    >
+                      {decodeHtml(p.org_name)}
+                    </strong>
+                  )}
                 </li>
               ))}
-            </ol>
+            </ul>
           </section>
         </>
       )}

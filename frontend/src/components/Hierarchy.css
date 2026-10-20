@@ -172,26 +172,32 @@
 .org-partner-grid {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 16px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
 }
-.org-partner-grid li {
+.org-partner { display: flex; flex-direction: column; border: 2px solid var(--ink); background: var(--white); min-width: 0; container-type: inline-size; }
+.org-partner img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 2px solid var(--ink); }
+.org-partner-mark {
+  flex: 1;
+  min-height: 75cqw; /* at least the 4:3 photo height, so mixed rows line up */
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 14px 16px;
-  border-left: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-  margin-bottom: -2px; /* hide the last row's bottom rule under the frame */
+  align-items: center;
+  justify-content: center;
+  padding: 10px !important;
+  /* shrink long acronyms to fit the tile width instead of breaking them */
+  font-size: min(1.6rem, calc(106cqw / var(--len, 6))) !important;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
-.org-partner-grid .mono { color: var(--red); font-size: 0.68rem; }
-.org-partner-grid strong { font-size: 1rem; letter-spacing: 0.02em; }
+.tint-ink { background: var(--ink); color: var(--sun); }
+.org-partner strong { padding: 8px 10px; font-size: 0.85rem; letter-spacing: 0.02em; overflow-wrap: anywhere; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .org-board-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .org-partner-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .org-departments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .org-departments::before, .org-dept::before { display: none; }
   .org-departments { padding-top: 0; }
@@ -207,5 +213,5 @@
   .org-departments { grid-template-columns: 1fr; }
   .org-board-grid { grid-template-columns: 1fr; padding: 12px; }
   .org-board-grid .org-person-highlight { grid-column: auto; }
-  .org-partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .org-partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; gap: 10px; }
 }

@@ -66,3 +66,11 @@ DOMPurify.addHook('afterSanitizeAttributes', node => {
 export function renderPostHtml(content) {
   return DOMPurify.sanitize(toEditorHtml(content), PURIFY_CONFIG);
 }
+
+/** Editor HTML (or legacy plain text) -> plain text, e.g. for summaries. */
+export function plainText(content) {
+  const el = document.createElement('div');
+  el.innerHTML = DOMPurify.sanitize(toEditorHtml(content), { ALLOWED_TAGS: ['p', 'br', 'li'] });
+  el.querySelectorAll('p, li, br').forEach(n => n.after(' '));
+  return (el.textContent || '').replace(/\s+/g, ' ').trim();
+}

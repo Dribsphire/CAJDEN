@@ -30,6 +30,7 @@ const ManageOfficers = lazy(() => import('./pages/admin/ManageOfficers.jsx'));
 const ManagePartners = lazy(() => import('./pages/admin/ManagePartners.jsx'));
 const ManageOffices = lazy(() => import('./pages/admin/ManageOffices.jsx'));
 const ManageServices = lazy(() => import('./pages/admin/ManageServices.jsx'));
+const ServiceEditor = lazy(() => import('./pages/admin/ServiceEditor.jsx'));
 const ManageAlbums = lazy(() => import('./pages/admin/ManageAlbums.jsx'));
 const ManageENews = lazy(() => import('./pages/admin/ManageENews.jsx'));
 const ManageMaterials = lazy(() => import('./pages/admin/ManageMaterials.jsx'));
@@ -81,6 +82,8 @@ export default function App() {
           <Route path="partners" element={<ManagePartners />} />
           <Route path="offices" element={<ManageOffices />} />
           <Route path="services" element={<ManageServices />} />
+          <Route path="services/new" element={<ServiceEditor />} />
+          <Route path="services/:id" element={<ServiceEditor />} />
           <Route path="albums" element={<ManageAlbums />} />
           <Route path="enews" element={<ManageENews />} />
           <Route path="materials" element={<ManageMaterials />} />

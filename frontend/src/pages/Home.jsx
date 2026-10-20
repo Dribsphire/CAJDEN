@@ -4,6 +4,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import api, { assetUrl } from '../api/axios';
 import { useSettings } from '../hooks/useSettings.js';
 import { decodeHtml, formatMonthYear, postDate } from '../utils/format.js';
+import { plainText } from '../utils/postContent.js';
 import OfficeMap from '../components/OfficeMap.jsx';
 import GoalsSection from '../components/GoalsSection.jsx';
 import Hablon from '../components/Hablon.jsx';
@@ -108,8 +109,8 @@ export default function Home() {
             {services.map((s, i) => (
               <li className="home-program" key={s.id}>
                 <span className="mono home-program-num">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="poster">{decodeHtml(s.title)}</h3>
-                <p>{decodeHtml(s.description)}</p>
+                <h3 className="poster"><Link to={`/services#program-${s.id}`}>{decodeHtml(s.title)}</Link></h3>
+                <p>{decodeHtml(s.summary) || plainText(s.description)}</p>
                 {s.image_path && <img src={assetUrl(s.image_path)} alt="" loading="lazy" />}
               </li>
             ))}

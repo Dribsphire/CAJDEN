@@ -30,12 +30,14 @@ backend/uploads/posts/*
 backend/uploads/albums/*
 backend/uploads/enews/*
 backend/uploads/materials/*
+backend/uploads/partners/*
 !backend/uploads/officers/.gitkeep
 !backend/uploads/services/.gitkeep
 !backend/uploads/posts/.gitkeep
 !backend/uploads/albums/.gitkeep
 !backend/uploads/enews/.gitkeep
 !backend/uploads/materials/.gitkeep
+!backend/uploads/partners/.gitkeep
 !backend/uploads/.htaccess
 
 # =========================================================

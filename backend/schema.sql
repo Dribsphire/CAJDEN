@@ -45,6 +45,7 @@ CREATE TABLE officers (
 CREATE TABLE partner_organizations (
   id INT AUTO_INCREMENT PRIMARY KEY,
   org_name VARCHAR(150) NOT NULL,
+  photo_path VARCHAR(255) DEFAULT NULL,             -- group photo or logo shown on the chart
   sort_order INT NOT NULL DEFAULT 0,
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -57,9 +58,12 @@ CREATE TABLE partner_organizations (
 CREATE TABLE services (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(150) NOT NULL,
-  description TEXT NOT NULL,
-  icon VARCHAR(60) DEFAULT 'FaHandsHelping',      -- react-icons component name
+  summary VARCHAR(300) DEFAULT NULL,              -- one or two lines for the homepage
+  description TEXT NOT NULL,                      -- full description (editor HTML) for the Programs page
+  icon VARCHAR(60) DEFAULT 'FaHandsHelping',      -- legacy; no longer shown
   image_path VARCHAR(255) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,              -- display order; the homepage shows the first four
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

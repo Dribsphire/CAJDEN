@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import api, { assetUrl } from '../api/axios';
 import PageHeader from '../components/PageHeader.jsx';
 import { decodeHtml } from '../utils/format.js';
+import { renderPostHtml } from '../utils/postContent.js';
 import './Services.css';
 
 export default function Services() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { hash } = useLocation();
 
   useEffect(() => {
     api.get('/services.php')
@@ -16,6 +18,12 @@ export default function Services() {
       .catch(() => setServices([]))
       .finally(() => setLoading(false));
   }, []);
+
+  // Links like /services#program-3 (homepage, admin "View site") jump to that program once loaded.
+  useEffect(() => {
+    if (loading || !hash) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [loading, hash]);
 
   return (
     <>
@@ -34,7 +42,7 @@ export default function Services() {
 
           <div className="program-list">
             {services.map((s, i) => (
-              <article className={`program-row ${i % 2 ? 'program-row-flip' : ''}`} key={s.id}>
+              <article className={`program-row ${i % 2 ? 'program-row-flip' : ''}`} key={s.id} id={`program-${s.id}`}>
                 <div className="program-image">
                   {s.image_path
                     ? <img src={assetUrl(s.image_path)} alt="" loading="lazy" />
@@ -43,7 +51,8 @@ export default function Services() {
                 <div className="program-body">
                   <span className="mono program-num">Program {String(i + 1).padStart(2, '0')}</span>
                   <h2 className="poster">{decodeHtml(s.title)}</h2>
-                  <p>{decodeHtml(s.description)}</p>
+                  {/* renderPostHtml sanitizes with DOMPurify before injecting */}
+                  <div className="prose program-desc" dangerouslySetInnerHTML={{ __html: renderPostHtml(s.description) }} />
                 </div>
               </article>
             ))}
