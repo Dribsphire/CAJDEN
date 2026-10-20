@@ -1,0 +1,57 @@
+@import './ManageServices.css';
+
+.alb-toolbar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.alb-toolbar .ofc-summary { margin-bottom: 0; }
+.alb-filters { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.alb-search { min-width: min(100%, 280px); padding: 9px 12px; border-width: 2px; margin-left: auto; }
+
+.alb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--white);
+  border: 2px dashed var(--ink-mute);
+}
+.alb-empty > svg { font-size: 2.4rem; color: var(--orange); }
+.alb-empty p { margin: 0; color: var(--ink-soft); }
+
+.alb-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.alb-card { display: flex; flex-direction: column; background: var(--white); border: 2px solid var(--ink); transition: transform 0.12s ease, box-shadow 0.12s ease; }
+.alb-card:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.alb-card.is-hidden { background: var(--paper); }
+.alb-card.is-hidden .alb-card-cover img { opacity: 0.55; }
+
+.alb-card-cover { position: relative; display: block; aspect-ratio: 4 / 3; border-bottom: 2px solid var(--ink); background: var(--paper-2); overflow: hidden; }
+.alb-card-cover img { width: 100%; height: 100%; object-fit: cover; }
+.alb-card-nocover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, var(--paper) 0 10px, var(--paper-2) 10px 20px);
+  color: var(--ink-mute);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.alb-card-count {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  font-size: 0.65rem;
+}
+.alb-card-flags { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.alb-badge-featured { background: var(--sun); color: var(--ink); }
+.alb-badge-hidden { background: var(--ink); color: var(--sun); }
+
+.alb-card-body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; flex: 1; }
+.alb-card-meta { font-size: 0.68rem; color: var(--red); }
+.alb-card-title { font-size: 1.2rem; font-weight: 600; line-height: 1.2; color: var(--ink); }
+.alb-card-title:hover { text-decoration: underline; }
+.alb-card-actions { display: flex; justify-content: flex-end; padding: 4px 6px; border-top: 1px dashed rgba(20, 19, 15, 0.2); }

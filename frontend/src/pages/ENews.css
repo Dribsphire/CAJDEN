@@ -1,20 +1,5 @@
 /* ---------- Latest issue ---------- */
-.enews-latest { display: grid; grid-template-columns: minmax(0, 440px) 1fr; gap: clamp(40px, 6vw, 80px); align-items: start; margin-bottom: 96px; }
-
-.issue-cover {
-  background: var(--sun);
-  border: var(--rule);
-  box-shadow: 12px 12px 0 var(--ink);
-  transform: rotate(-2deg);
-  display: flex;
-  flex-direction: column;
-}
-.issue-cover-mast { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: var(--rule); }
-.issue-cover-mast .poster { font-size: 1.15rem; }
-.issue-cover-mast .mono { font-size: 0.7rem; }
-.issue-cover-no { font-size: clamp(5rem, 11vw, 7.6rem); line-height: 0.85; padding: 18px 18px 14px; }
-.issue-cover img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-top: var(--rule); border-bottom: var(--rule); }
-.issue-cover-headline { font-size: 1.55rem; font-weight: 600; line-height: 1.12; padding: 16px 18px 22px; }
+.enews-latest { display: grid; grid-template-columns: minmax(0, 400px) 1fr; gap: clamp(40px, 6vw, 80px); align-items: start; margin-bottom: 96px; }
 
 .enews-latest-info { display: flex; flex-direction: column; gap: 22px; }
 .enews-latest-info > .poster { font-size: clamp(2.4rem, 5vw, 4.4rem); }
@@ -27,28 +12,6 @@
 
 /* ---------- Archive ---------- */
 .enews-archive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.enews-past { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.enews-past-cover {
-  aspect-ratio: 4 / 4.4;
-  border: var(--rule);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-a.enews-past:hover .enews-past-cover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard); }
-.enews-past-cover .poster { font-size: clamp(2.6rem, 5vw, 4.4rem); line-height: 0.9; overflow-wrap: anywhere; }
-.enews-past-cover .mono { font-size: 0.72rem; }
-.tint-field { background: var(--field); color: var(--paper); }
-.tint-field .mono { color: var(--sun); }
-.tint-red { background: var(--red); color: var(--paper); }
-.tint-red .mono { color: var(--sun); }
-.tint-sky { background: var(--sky); }
-.tint-orange { background: var(--orange); }
-.tint-sun { background: var(--sun); }
-.enews-past-title { font-size: 1.25rem; font-weight: 600; line-height: 1.2; }
-.enews-past-file { font-size: 0.7rem; color: var(--ink-mute); }
 
 /* ---------- Subscribe ---------- */
 .enews-subscribe { background: var(--ink); color: var(--paper); padding: clamp(56px, 7vw, 80px) 0; }
@@ -79,9 +42,34 @@ a.enews-past:hover .enews-past-cover { transform: translate(-3px, -3px); box-sha
 }
 @media (max-width: 860px) {
   .enews-latest { grid-template-columns: 1fr; }
-  .issue-cover { max-width: 420px; }
+  .issue-cover { max-width: 380px; }
 }
 @media (max-width: 520px) {
   .enews-subscribe-row { flex-direction: column; gap: 12px; }
   .enews-subscribe-row input { border-right: 3px solid var(--sun); }
 }
+
+.enews-latest-cover { display: block; transition: transform 0.15s ease; }
+.enews-latest-cover:hover { transform: translate(-3px, -3px); }
+.enews-toc-label { font-size: 0.72rem; color: var(--ink-mute); margin-bottom: -10px; }
+.empty-note a { color: var(--field); text-decoration: underline; }
+
+/* honeypot field: present for bots, invisible to people and screen readers */
+.enews-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- Single issue page ---------- */
+.enews-issue { margin-bottom: 72px; }
+
+.enews-issue-nav { display: flex; justify-content: space-between; gap: 20px; border-top: var(--rule); padding-top: 24px; }
+.enews-issue-nav-link { display: flex; align-items: center; gap: 14px; max-width: 48%; color: var(--ink); }
+.enews-issue-nav-link > span { display: flex; flex-direction: column; gap: 4px; }
+.enews-issue-nav-link .mono { font-size: 0.7rem; color: var(--red); }
+.enews-issue-nav-link strong { font-size: 1.15rem; line-height: 1.2; }
+.enews-issue-nav-link:hover strong { text-decoration: underline; }
+.enews-issue-nav-link.is-next { text-align: right; margin-left: auto; }
+.enews-issue-nav-link.is-next > span { align-items: flex-end; }
+
+@media (max-width: 640px) {
+  .enews-issue-nav { flex-direction: column; }
+  .enews-issue-nav-link { max-width: none; }
+  }

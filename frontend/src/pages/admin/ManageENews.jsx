@@ -1,188 +1,175 @@
 import { useEffect, useState } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaFilePdf } from 'react-icons/fa';
-import api, { assetUrl } from '../../api/axios';
+import { Link, useSearchParams } from 'react-router-dom';
+import { FaPlus, FaTrash, FaEdit, FaExternalLinkAlt, FaFilePdf, FaSearch, FaDownload, FaCopy } from 'react-icons/fa';
+import api, { API_BASE, assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
-import { resizeImage } from '../../utils/resizeImage.js';
-import { formatBytes, formatDate } from '../../utils/format.js';
+import { IssueTile } from '../../components/IssueCover.jsx';
+import { decodeHtml, formatBytes, formatDate } from '../../utils/format.js';
+import './ManageOfficers.css';
+import './ManageENews.css';
 
-const EMPTY = { id: null, issue_number: '', title: '', period_label: '', published_on: '', summary: '', highlights: '' };
-const FIELDS = ['issue_number', 'title', 'period_label', 'published_on', 'summary', 'highlights'];
+function Issues({ issues, loading, onDelete }) {
+  if (loading) return <div className="admin-loading">Loading…</div>;
+  if (!issues.length) {
+    return (
+      <div className="svc-empty enews-empty">
+        <p>No issues yet. Publish the first one to fill the E-News page.</p>
+        <Link to="/admin/enews/new" className="btn btn-primary"><FaPlus /> Create issue No. 1</Link>
+      </div>
+    );
+  }
+  return (
+    <ul className="enews-admin-grid">
+      {issues.map((issue, i) => {
+        const draft = !Number(issue.is_published);
+        return (
+          <li key={issue.id} className={`enews-admin-card ${draft ? 'is-draft' : ''}`}>
+            <Link to={`/admin/enews/${issue.id}`} className="enews-admin-cover" aria-label={`Edit Issue No. ${issue.issue_number}`}>
+              <IssueTile issue={issue} index={i} />
+              {draft && <span className="svc-badge svc-badge-hidden enews-admin-flag">Draft</span>}
+              {!draft && i === issues.findIndex(x => Number(x.is_published)) && <span className="svc-badge svc-badge-home enews-admin-flag">Latest</span>}
+            </Link>
+            <div className="enews-admin-body">
+              <Link to={`/admin/enews/${issue.id}`} className="enews-admin-title serif">{decodeHtml(issue.title)}</Link>
+              <span className="mono enews-admin-meta">
+                {formatDate(issue.published_on) || 'No date'}
+                {' · '}
+                {issue.pdf_path
+                  ? <a href={assetUrl(issue.pdf_path)} target="_blank" rel="noreferrer"><FaFilePdf /> {formatBytes(issue.file_size) || 'PDF'}</a>
+                  : <span className="enews-admin-missing">No PDF</span>}
+              </span>
+            </div>
+            <div className="enews-admin-actions">
+              <Link to={`/admin/enews/${issue.id}`} className="icon-btn" aria-label="Edit"><FaEdit /></Link>
+              {!draft && (
+                <a className="icon-btn" href={`/e-news/${issue.issue_number}`} target="_blank" rel="noreferrer" aria-label="View on site"><FaExternalLinkAlt /></a>
+              )}
+              <button type="button" className="icon-btn danger" onClick={() => onDelete(issue)} aria-label="Delete"><FaTrash /></button>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function Subscribers({ subscribers, loading, onRemove, notify }) {
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
+  const shown = q ? subscribers.filter(s => s.email.toLowerCase().includes(q)) : subscribers;
+  const thisMonth = subscribers.filter(s => (s.subscribed_at || '').slice(0, 7) === new Date().toISOString().slice(0, 7)).length;
+
+  function copyAll() {
+    navigator.clipboard?.writeText(subscribers.map(s => s.email).join(', '))
+      .then(() => notify('success', `${subscribers.length} email addresses copied. Paste them into BCC.`));
+  }
+
+  if (loading) return <div className="admin-loading">Loading…</div>;
+  return (
+    <>
+      <div className="fbpo-toolbar">
+        <div className="ofc-summary">
+          <span><strong>{subscribers.length}</strong> subscribers</span>
+          <span><strong>{thisMonth}</strong> new this month</span>
+        </div>
+        {subscribers.length > 0 && (
+          <div className="ofc-header-actions">
+            <label className="search-field fbpo-search">
+              <FaSearch aria-hidden="true" />
+              <span className="sr-only">Search subscribers</span>
+              <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search email…" />
+            </label>
+            <button type="button" className="btn btn-outline btn-sm" onClick={copyAll}><FaCopy /> Copy all</button>
+            {/* A plain link download; the admin session cookie goes with it */}
+            <a className="btn btn-outline btn-sm" href={`${API_BASE}/enews_subscribe.php?format=csv`}><FaDownload /> Export CSV</a>
+          </div>
+        )}
+      </div>
+      <p className="ofc-sub enews-sub-hint">
+        People sign up at the bottom of the E-News page. When a new issue is out, send it from your email with these addresses in <strong>BCC</strong>, so subscribers can't see each other's emails.
+      </p>
+      <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead><tr><th>Email</th><th>Subscribed</th><th><span className="sr-only">Actions</span></th></tr></thead>
+          <tbody>
+            {shown.length === 0 && (
+              <tr><td colSpan={3}>{subscribers.length ? `No subscriber matches "${query}".` : 'No subscribers yet.'}</td></tr>
+            )}
+            {shown.map(s => (
+              <tr key={s.id}>
+                <td><a href={`mailto:${s.email}`}>{s.email}</a></td>
+                <td>{formatDate(s.subscribed_at)}</td>
+                <td style={{ textAlign: 'right' }}>
+                  <button className="icon-btn danger" onClick={() => onRemove(s)} aria-label={`Remove ${s.email}`}><FaTrash /></button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
 
 export default function ManageENews() {
+  const [params, setParams] = useSearchParams();
+  const tab = params.get('tab') === 'subscribers' ? 'subscribers' : 'issues';
   const [issues, setIssues] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState(EMPTY);
-  const [cover, setCover] = useState(null);
-  const [pdf, setPdf] = useState(null);
-  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
+  const notify = (type, message) => setToast({ type, message });
 
   function load() {
-    setLoading(true);
-    Promise.all([api.get('/enews.php'), api.get('/enews_subscribe.php')])
+    return Promise.all([api.get('/enews.php', { params: { all: 1 } }), api.get('/enews_subscribe.php')])
       .then(([i, s]) => { setIssues(i.data.issues || []); setSubscribers(s.data.subscribers || []); })
       .finally(() => setLoading(false));
   }
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
-  function openCreate() {
-    const next = issues.length ? Math.max(...issues.map(i => Number(i.issue_number))) + 1 : 1;
-    setForm({ ...EMPTY, issue_number: String(next) });
-    setCover(null); setPdf(null); setModalOpen(true);
-  }
-  function openEdit(issue) {
-    const f = { id: issue.id };
-    FIELDS.forEach(k => { f[k] = issue[k] ?? ''; });
-    setForm(f); setCover(null); setPdf(null); setModalOpen(true);
-  }
-
-  async function handleDelete(issue) {
-    if (!confirm(`Delete Issue No. ${issue.issue_number}? The PDF will be removed too.`)) return;
+  async function deleteIssue(issue) {
+    if (!confirm(`Delete Issue No. ${issue.issue_number}? Its PDF and cover will be deleted too.`)) return;
     await api.delete(`/enews.php?id=${issue.id}`);
-    setToast({ type: 'success', message: 'Issue deleted.' });
+    notify('success', `Issue No. ${issue.issue_number} deleted.`);
     load();
   }
 
   async function removeSubscriber(s) {
     if (!confirm(`Remove ${s.email} from the mailing list?`)) return;
     await api.delete(`/enews_subscribe.php?id=${s.id}`);
+    notify('success', 'Subscriber removed.');
     load();
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const fd = new FormData();
-      FIELDS.forEach(k => fd.append(k, form[k] ?? ''));
-      if (cover) fd.append('cover', await resizeImage(cover));
-      if (pdf) fd.append('pdf', pdf);
-      const cfg = { headers: { 'Content-Type': 'multipart/form-data' } };
-      if (form.id) await api.post(`/enews.php?id=${form.id}&_method=PUT`, fd, cfg);
-      else await api.post('/enews.php', fd, cfg);
-      setToast({ type: 'success', message: `Issue ${form.id ? 'updated' : 'published'}.` });
-      setModalOpen(false);
-      load();
-    } catch (err) {
-      setToast({ type: 'error', message: err.response?.data?.message || 'Failed to save issue.' });
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  function copyEmails() {
-    navigator.clipboard?.writeText(subscribers.map(s => s.email).join(', '))
-      .then(() => setToast({ type: 'success', message: 'Subscriber emails copied.' }));
-  }
+  const drafts = issues.filter(i => !Number(i.is_published)).length;
 
   return (
-    <>
+    <div className="enews-admin">
       <div className="admin-page-header">
-        <h2>E-News Issues</h2>
-        <button className="btn btn-primary" onClick={openCreate}><FaPlus /> New Issue</button>
-      </div>
-
-      <div className="admin-table-wrap">
-        <table className="admin-table">
-          <thead><tr><th>Cover</th><th>No.</th><th>Headline</th><th>Period</th><th>PDF</th><th>Actions</th></tr></thead>
-          <tbody>
-            {loading && <tr><td colSpan={6}>Loading…</td></tr>}
-            {!loading && issues.length === 0 && <tr><td colSpan={6}>No issues yet. Publish the first one to fill the E-News page.</td></tr>}
-            {issues.map(i => (
-              <tr key={i.id}>
-                <td>{i.cover_image ? <img className="admin-thumb" src={assetUrl(i.cover_image)} alt="" /> : <div className="admin-thumb" />}</td>
-                <td><strong>{i.issue_number}</strong></td>
-                <td>{i.title}</td>
-                <td>{i.period_label || formatDate(i.published_on) || '—'}</td>
-                <td>
-                  {i.pdf_path
-                    ? <a href={assetUrl(i.pdf_path)} target="_blank" rel="noreferrer"><FaFilePdf /> {formatBytes(i.file_size)}</a>
-                    : <span style={{ color: 'var(--red)' }}>Missing</span>}
-                </td>
-                <td>
-                  <button className="icon-btn" onClick={() => openEdit(i)} aria-label="Edit"><FaEdit /></button>
-                  <button className="icon-btn danger" onClick={() => handleDelete(i)} aria-label="Delete"><FaTrash /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="admin-page-header" style={{ marginTop: 40 }}>
-        <h2>Subscribers ({subscribers.length})</h2>
-        {subscribers.length > 0 && <button className="btn btn-outline btn-sm" onClick={copyEmails}>Copy all emails</button>}
-      </div>
-      <div className="admin-table-wrap">
-        <table className="admin-table">
-          <thead><tr><th>Email</th><th>Subscribed</th><th></th></tr></thead>
-          <tbody>
-            {!loading && subscribers.length === 0 && <tr><td colSpan={3}>No subscribers yet. Visitors can sign up at the bottom of the E-News page.</td></tr>}
-            {subscribers.map(s => (
-              <tr key={s.id}>
-                <td>{s.email}</td>
-                <td>{formatDate(s.subscribed_at)}</td>
-                <td><button className="icon-btn danger" onClick={() => removeSubscriber(s)} aria-label="Remove"><FaTrash /></button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {modalOpen && (
-        <div className="modal-overlay" onClick={() => !saving && setModalOpen(false)}>
-          <form className="modal-card" onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
-            <button type="button" className="icon-btn modal-close" onClick={() => setModalOpen(false)}><FaTimes /></button>
-            <h3>{form.id ? `Edit Issue No. ${form.issue_number}` : 'New Issue'}</h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 16 }}>
-              <div className="form-row">
-                <label>Issue no.</label>
-                <input type="number" min="1" value={form.issue_number} onChange={e => setForm({ ...form, issue_number: e.target.value })} required />
-              </div>
-              <div className="form-row">
-                <label>Period label</label>
-                <input value={form.period_label} onChange={e => setForm({ ...form, period_label: e.target.value })} placeholder="e.g. Q1 2026" />
-              </div>
-            </div>
-            <div className="form-row">
-              <label>Cover headline</label>
-              <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
-            </div>
-            <div className="form-row">
-              <label>Publication date</label>
-              <input type="date" value={form.published_on} onChange={e => setForm({ ...form, published_on: e.target.value })} />
-            </div>
-            <div className="form-row">
-              <label>Short summary</label>
-              <textarea rows="3" value={form.summary} onChange={e => setForm({ ...form, summary: e.target.value })} />
-            </div>
-            <div className="form-row">
-              <label>In this issue</label>
-              <textarea rows="4" value={form.highlights} onChange={e => setForm({ ...form, highlights: e.target.value })} placeholder={'One story per line, e.g.\nFrom the director: twelve years in our communities\nMothers lead the health census'} />
-              <span className="hint">Shown as the table of contents for the latest issue.</span>
-            </div>
-            <div className="form-row">
-              <label>Cover photo {form.id && '(leave blank to keep current)'}</label>
-              <input type="file" accept="image/png, image/jpeg, image/webp" onChange={e => setCover(e.target.files[0])} />
-            </div>
-            <div className="form-row">
-              <label>Newsletter PDF {form.id && '(leave blank to keep current)'}</label>
-              <input type="file" accept="application/pdf" onChange={e => setPdf(e.target.files[0])} />
-              <span className="hint">PDF up to 30MB.</span>
-            </div>
-
-            <div className="modal-actions">
-              <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save Issue'}</button>
-            </div>
-          </form>
+        <div>
+          <h2>E-News</h2>
+          <p className="ofc-sub">The newsletter archive on the E-News page, newest issue first.</p>
         </div>
-      )}
+        <div className="ofc-header-actions">
+          <a className="btn btn-outline btn-sm" href="/e-news" target="_blank" rel="noreferrer">View page <FaExternalLinkAlt /></a>
+          <Link to="/admin/enews/new" className="btn btn-primary"><FaPlus /> New issue</Link>
+        </div>
+      </div>
+
+      <div className="enews-tabs" role="tablist">
+        <button role="tab" aria-selected={tab === 'issues'} className={tab === 'issues' ? 'is-on' : ''} onClick={() => setParams({})}>
+          Issues <span>{issues.length}{drafts ? ` · ${drafts} draft${drafts === 1 ? '' : 's'}` : ''}</span>
+        </button>
+        <button role="tab" aria-selected={tab === 'subscribers'} className={tab === 'subscribers' ? 'is-on' : ''} onClick={() => setParams({ tab: 'subscribers' })}>
+          Subscribers <span>{subscribers.length}</span>
+        </button>
+      </div>
+
+      {tab === 'issues'
+        ? <Issues issues={issues} loading={loading} onDelete={deleteIssue} />
+        : <Subscribers subscribers={subscribers} loading={loading} onRemove={removeSubscriber} notify={notify} />}
 
       <Toast type={toast?.type} message={toast?.message} onClose={() => setToast(null)} />
-    </>
+    </div>
   );
 }

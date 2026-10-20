@@ -1,0 +1,40 @@
+.reader { display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: var(--ink); color: var(--paper); }
+
+.reader-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px clamp(12px, 3vw, 28px);
+  border-bottom: 2px solid #3a382f;
+  flex-shrink: 0;
+}
+.reader-back { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; color: var(--sun); white-space: nowrap; }
+.reader-back:hover { text-decoration: underline; }
+.reader-title { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 12px; }
+.reader-title .poster { font-size: 1.3rem; color: var(--sun); flex-shrink: 0; }
+.reader-title .serif { font-size: 1.05rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reader-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.reader-actions .btn-sun { box-shadow: 4px 4px 0 var(--orange); }
+
+.reader-stage { flex: 1; min-height: 0; display: flex; }
+.reader-frame { flex: 1; width: 100%; height: 100%; border: none; background: #3a382f; }
+.reader-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--paper);
+}
+.reader-message p { color: var(--paper); margin: 0; }
+
+@media (max-width: 720px) {
+  .reader-back span, .reader-actions span { display: none; }
+  .reader-title .serif { display: none; }
+}
+.reader-frame > .reader-message { height: 100%; } /* fallback fills and centres inside the frame */

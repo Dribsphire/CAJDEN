@@ -142,6 +142,7 @@ CREATE TABLE photo_albums (
   description TEXT DEFAULT NULL,
   event_date DATE DEFAULT NULL,                    -- when the activity happened
   is_featured BOOLEAN NOT NULL DEFAULT FALSE,      -- shown large at the top of the Photos page
+  is_published TINYINT(1) NOT NULL DEFAULT 1,      -- 0 = hidden, admin only
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -172,6 +173,7 @@ CREATE TABLE enews_issues (
   cover_image VARCHAR(255) DEFAULT NULL,
   pdf_path VARCHAR(255) DEFAULT NULL,
   file_size INT DEFAULT NULL,                      -- bytes, for the "PDF · 4.2 MB" label
+  is_published TINYINT(1) NOT NULL DEFAULT 1,       -- 0 = draft, admin only
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -73,6 +73,9 @@ export default function AlbumDetail() {
 
   return (
     <>
+      {!Number(album.is_published) && (
+        <div className="post-preview-banner mono" role="status">Hidden album: only admins can see this page.</div>
+      )}
       <PageHeader
         title={album.title}
         size="md"

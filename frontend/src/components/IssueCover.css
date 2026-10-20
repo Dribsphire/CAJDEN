@@ -1,0 +1,53 @@
+/* Newsletter cover and archive tile, shared by the public E-News pages and the admin previews.
+   Uploaded covers are complete front pages, so they're never cropped or overlaid. */
+
+/* ---------- Featured cover ---------- */
+.issue-cover { margin: 0; display: flex; flex-direction: column; gap: 18px; }
+.issue-cover-caption { display: flex; flex-direction: column; gap: 6px; }
+.issue-cover-caption .mono { font-size: 0.72rem; color: var(--red); }
+.issue-cover-caption .poster { font-size: clamp(2.6rem, 5vw, 3.8rem); line-height: 0.9; }
+.issue-cover-caption .serif { font-size: 1.3rem; font-weight: 600; line-height: 1.2; }
+
+.issue-cover-image {
+  display: block;
+  width: 100%;
+  height: auto; /* keep the cover's own proportions */
+  border: var(--rule);
+  box-shadow: 12px 12px 0 var(--ink);
+  background: var(--white);
+}
+/* No cover uploaded yet: a portrait (A4) placeholder */
+.issue-cover-empty {
+  aspect-ratio: 210 / 297;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, var(--sun) 0 14px, #f9cf45 14px 28px);
+}
+.issue-cover-empty .poster { font-size: clamp(3.6rem, 9vw, 6rem); }
+
+/* ---------- Archive tile ---------- */
+.enews-past { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.enews-tile { display: flex; flex-direction: column; gap: 8px; }
+.enews-tile-label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.enews-tile-label .poster { font-size: 1.4rem; line-height: 1; }
+.enews-tile-label .mono { font-size: 0.68rem; color: var(--ink-mute); }
+.enews-tile-cover {
+  display: block;
+  width: 100%;
+  height: auto; /* the cover's own proportions, never cropped */
+  background: var(--white);
+  border: var(--rule);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+a.enews-past:hover .enews-tile-cover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard); }
+.enews-tile-empty { display: flex; align-items: flex-end; padding: 16px; aspect-ratio: 210 / 297; }
+.enews-tile-empty .poster { font-size: clamp(2.4rem, 4.4vw, 3.6rem); line-height: 0.9; }
+.tint-field { background: var(--field); color: var(--paper); }
+.tint-red { background: var(--red); color: var(--paper); }
+.tint-sky { background: var(--sky); }
+.tint-orange { background: var(--orange); }
+.tint-sun { background: var(--sun); }
+
+.enews-past-title { font-size: 1.2rem; font-weight: 600; line-height: 1.2; }
+.enews-past-file { font-size: 0.7rem; color: var(--ink-mute); }

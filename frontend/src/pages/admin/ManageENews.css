@@ -1,0 +1,39 @@
+@import './ManageServices.css';
+@import './ManagePartners.css';
+
+.enews-tabs { display: flex; gap: 0; margin-bottom: 22px; border-bottom: var(--rule); }
+.enews-tabs button {
+  padding: 10px 18px;
+  margin-bottom: -3px;
+  border: 3px solid transparent;
+  border-bottom: none;
+  background: none;
+  font-family: var(--font-poster);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.enews-tabs button span { font-family: var(--font-mono); font-size: 0.68rem; margin-left: 6px; color: var(--ink-mute); text-transform: none; }
+.enews-tabs button.is-on { border-color: var(--ink); background: var(--white); color: var(--ink); }
+.enews-tabs button:hover:not(.is-on) { color: var(--ink); }
+
+.enews-empty { margin-top: 4px; }
+
+.enews-admin-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.enews-admin-card { display: flex; flex-direction: column; background: var(--white); border: 2px solid var(--ink); }
+.enews-admin-card.is-draft { background: var(--paper); }
+.enews-admin-card.is-draft .enews-tile-cover { opacity: 0.6; }
+.enews-admin-cover { position: relative; display: block; }
+.enews-admin-cover .enews-tile { padding: 12px 12px 0; }
+.enews-admin-cover .enews-tile-cover { border-width: 2px; }
+.enews-admin-cover:hover .enews-tile-cover { filter: brightness(1.04); }
+.enews-admin-flag { position: absolute; top: 52px; right: 20px; z-index: 2; } /* on the cover's corner */
+.enews-admin-body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; flex: 1; }
+.enews-admin-title { font-size: 1.15rem; font-weight: 600; line-height: 1.2; color: var(--ink); }
+.enews-admin-title:hover { text-decoration: underline; }
+.enews-admin-meta { font-size: 0.68rem; color: var(--ink-soft); }
+.enews-admin-meta a { color: var(--field); }
+.enews-admin-meta a:hover { text-decoration: underline; }
+.enews-admin-missing { color: var(--red); }
+.enews-admin-actions { display: flex; justify-content: flex-end; padding: 4px 6px; border-top: 1px dashed rgba(20, 19, 15, 0.2); }
+.enews-sub-hint { margin: 0 0 16px; max-width: 760px; }

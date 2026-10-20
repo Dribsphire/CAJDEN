@@ -321,3 +321,13 @@ a.card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard);
 .prose img { width: 100%; height: auto; border: var(--rule); margin: 1.6em 0; }
 
 .admin-loading { padding: 48px; text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-mute); }
+
+/* Shown above drafts/scheduled content that only admins can see */
+.post-preview-banner {
+  padding: 10px var(--gutter);
+  background: var(--orange);
+  color: var(--ink);
+  border-bottom: var(--rule);
+  font-size: 0.75rem;
+  text-align: center;
+}

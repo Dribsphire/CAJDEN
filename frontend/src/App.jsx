@@ -14,6 +14,8 @@ import Contact from './pages/Contact.jsx';
 import Photos from './pages/Photos.jsx';
 import AlbumDetail from './pages/AlbumDetail.jsx';
 import ENews from './pages/ENews.jsx';
+import ENewsIssue from './pages/ENewsIssue.jsx';
+import ENewsReader from './pages/ENewsReader.jsx';
 import Materials from './pages/Materials.jsx';
 import NotFound from './pages/NotFound.jsx';
 
@@ -32,7 +34,9 @@ const ManageOffices = lazy(() => import('./pages/admin/ManageOffices.jsx'));
 const ManageServices = lazy(() => import('./pages/admin/ManageServices.jsx'));
 const ServiceEditor = lazy(() => import('./pages/admin/ServiceEditor.jsx'));
 const ManageAlbums = lazy(() => import('./pages/admin/ManageAlbums.jsx'));
+const AlbumEditor = lazy(() => import('./pages/admin/AlbumEditor.jsx'));
 const ManageENews = lazy(() => import('./pages/admin/ManageENews.jsx'));
+const ENewsEditor = lazy(() => import('./pages/admin/ENewsEditor.jsx'));
 const ManageMaterials = lazy(() => import('./pages/admin/ManageMaterials.jsx'));
 const ManageMessages = lazy(() => import('./pages/admin/ManageMessages.jsx'));
 const ManageSettings = lazy(() => import('./pages/admin/ManageSettings.jsx'));
@@ -66,10 +70,14 @@ export default function App() {
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:id" element={<AlbumDetail />} />
           <Route path="/e-news" element={<ENews />} />
+          <Route path="/e-news/:number" element={<ENewsIssue />} />
           <Route path="/materials" element={<Materials />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+
+        {/* Full-screen newsletter reader, outside the site layout */}
+        <Route path="/e-news/:number/read" element={<ENewsReader />} />
 
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -85,7 +93,11 @@ export default function App() {
           <Route path="services/new" element={<ServiceEditor />} />
           <Route path="services/:id" element={<ServiceEditor />} />
           <Route path="albums" element={<ManageAlbums />} />
+          <Route path="albums/new" element={<AlbumEditor />} />
+          <Route path="albums/:id" element={<AlbumEditor />} />
           <Route path="enews" element={<ManageENews />} />
+          <Route path="enews/new" element={<ENewsEditor />} />
+          <Route path="enews/:id" element={<ENewsEditor />} />
           <Route path="materials" element={<ManageMaterials />} />
           <Route path="messages" element={<ManageMessages />} />
           <Route path="settings" element={<ManageSettings />} />
