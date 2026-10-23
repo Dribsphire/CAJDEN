@@ -55,3 +55,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Release builds (deploy/build.mjs)
+deploy/releases/

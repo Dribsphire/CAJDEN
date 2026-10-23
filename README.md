@@ -95,18 +95,8 @@ update `VITE_API_BASE` and `VITE_UPLOADS_BASE` in `frontend/.env`, and
 
 ## 3. Deploying to Hostinger (or similar shared PHP hosting)
 
-1. Upload the contents of `backend/` to a subdomain or subfolder (e.g. `api.yoursite.org`).
-2. Import `schema.sql` via the host's phpMyAdmin, then create `backend/.env`
-   (copy from `.env.example`) with the live database credentials, your live
-   frontend's URL in `APP_FRONTEND_URL`, and your Gmail SMTP details.
-3. Run `npm run build` in `frontend/` (after setting `VITE_API_BASE`/
-   `VITE_UPLOADS_BASE` in `frontend/.env` to your live API URL — Vite bakes
-   these in at build time, so this must be done *before* building), then
-   upload the generated `dist/` folder to your main domain's web root.
-4. Make sure `backend/uploads/` is writable (chmod 755) so image uploads work.
-5. Double-check `backend/.env` is not web-accessible on your host (it
-   shouldn't be served since it doesn't have a `.php` extension, but some
-   shared hosts serve dotfiles by default — worth a quick check).
+Run `node deploy/build.mjs` to build a ready-to-upload zip, then follow
+[deploy/DEPLOY.md](deploy/DEPLOY.md) (backup, upload, `.env` check, smoke test, rollback).
 
 ### Updating an existing install: Resources pages (Photos, E-News, Materials)
 
