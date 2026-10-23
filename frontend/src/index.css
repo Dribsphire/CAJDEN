@@ -331,3 +331,6 @@ a.card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hard);
   font-size: 0.75rem;
   text-align: center;
 }
+
+/* Honeypot form field: present for spam bots, invisible to people and screen readers */
+.enews-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }

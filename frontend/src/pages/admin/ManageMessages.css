@@ -1,0 +1,33 @@
+@import './ManageServices.css';
+
+.msg-table tbody tr { cursor: pointer; }
+.msg-table tr.is-unread td { font-weight: 700; background: #fffbea; }
+.msg-table tr.is-active td { background: var(--sun) !important; }
+.msg-email { font-size: 0.8rem; font-weight: 400; color: var(--ink-soft); }
+.msg-icon-unread { color: var(--orange); }
+.msg-icon-read { color: var(--ink-mute); }
+.msg-badge-replied { background: var(--field); color: var(--paper); }
+.msg-badge-new { background: var(--orange); color: var(--ink); }
+.msg-muted { font-size: 0.82rem; color: var(--ink-mute); font-weight: 400; }
+.msg-date { font-size: 0.75rem; white-space: nowrap; }
+.msg-actions { white-space: nowrap; text-align: right; }
+.ofc-warning code { font-family: var(--font-mono); font-size: 0.85em; }
+
+.msg-drawer { width: min(560px, 100%); }
+.msg-drawer .ofc-drawer-head h3 { font-size: 1.1rem; line-height: 1.25; padding-right: 12px; }
+.msg-from { display: flex; flex-direction: column; gap: 3px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); margin-bottom: 14px; }
+.msg-from strong { font-family: var(--font-serif); font-size: 1.25rem; }
+.msg-from a { color: var(--field); text-decoration: underline; width: fit-content; }
+.msg-from .mono { font-size: 0.7rem; color: var(--ink-mute); }
+.msg-body { white-space: pre-wrap; font-size: 1rem; line-height: 1.65; padding: 14px 16px; background: var(--paper); border-left: 6px solid var(--sun); margin-bottom: 18px; }
+
+.msg-sent-reply { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; margin-bottom: 18px; border: 2px solid var(--field); background: #eef6f0; }
+.msg-sent-reply .mono { font-size: 0.7rem; color: var(--field); text-transform: uppercase; }
+.msg-sent-reply div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.55; }
+
+.msg-reply { display: flex; flex-direction: column; gap: 8px; }
+.msg-reply .ofc-field-label svg { margin-right: 4px; }
+.msg-reply textarea { padding: 12px 14px; border: 2px solid var(--ink); background: var(--white); font: inherit; font-size: 1rem; line-height: 1.5; resize: vertical; }
+.msg-reply textarea:focus { outline: none; box-shadow: 4px 4px 0 var(--sun); }
+.msg-reply textarea:disabled { background: var(--paper-2); }
+.msg-reply-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 6px; }

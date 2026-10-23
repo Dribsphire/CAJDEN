@@ -165,7 +165,7 @@ export default function Home() {
       <section className="home-cta">
         <div className="container home-cta-inner">
           <div className="home-cta-copy">
-            <h2 className="poster">Magbulig kita.</h2>
+            <h2 className="poster">Magbuliganay kita.</h2>
             <p className="serif">Let's help each other. Volunteer, partner, or support a program.</p>
           </div>
           <div className="home-cta-actions">

@@ -131,6 +131,25 @@ To work locally without editing the production `.env` files:
 
 Both files are gitignored.
 
+### Email (Gmail SMTP)
+
+The site sends email through one Gmail account (`backend/includes/mailer.php`):
+
+- **Contact form:** a notification to `CONTACT_RECEIVER_EMAIL` (reply in Gmail to answer the sender) and an acknowledgement to the visitor. Messages are always saved in the admin, even if email fails.
+- **Admin → Contact Messages:** reply to a message from the admin; the reply is sent from the Gmail account.
+- **E-News:** a welcome email with a one-click unsubscribe link (`/e-news/unsubscribe`), and **Send to subscribers** on a published issue (BCC batches of 50; Gmail allows about 500 recipients a day).
+
+Setup: turn on 2-Step Verification for the Gmail account, create an App Password at
+https://myaccount.google.com/apppasswords, and put it in `GMAIL_APP_PASSWORD` in `backend/.env`
+(spaces are fine). Check it with:
+
+```bash
+php backend/scripts/test_mail.php               # log in only
+php backend/scripts/test_mail.php you@example.org   # log in and send a test email
+```
+
+or **Send test email** on the Contact Messages admin page.
+
 ## Notes on the Negros Island office map
 
 The Leaflet map (`OfficeMap.jsx`) is centered on Negros Island by default and

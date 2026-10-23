@@ -7,7 +7,7 @@ import PageHeader from '../components/PageHeader.jsx';
 import Toast from '../components/Toast.jsx';
 import './Contact.css';
 
-const EMPTY_FORM = { full_name: '', email: '', subject: '', message: '' };
+const EMPTY_FORM = { full_name: '', email: '', subject: '', message: '', website: '' }; // website = honeypot
 
 export default function Contact() {
   const { settings } = useSettings();
@@ -106,6 +106,12 @@ export default function Contact() {
                   aria-invalid={!!errors.message}
                 />
                 {errors.message && <span className="form-error">{errors.message}</span>}
+              </div>
+
+              {/* Honeypot: hidden from people, filled in by spam bots */}
+              <div className="enews-hp" aria-hidden="true">
+                <label htmlFor="contact-website">Leave this empty</label>
+                <input id="contact-website" tabIndex={-1} autoComplete="off" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} />
               </div>
 
               <button type="submit" className="btn btn-sun" disabled={submitting}>

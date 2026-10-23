@@ -16,6 +16,7 @@ import AlbumDetail from './pages/AlbumDetail.jsx';
 import ENews from './pages/ENews.jsx';
 import ENewsIssue from './pages/ENewsIssue.jsx';
 import ENewsReader from './pages/ENewsReader.jsx';
+import ENewsUnsubscribe from './pages/ENewsUnsubscribe.jsx';
 import Materials from './pages/Materials.jsx';
 import NotFound from './pages/NotFound.jsx';
 
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:id" element={<AlbumDetail />} />
           <Route path="/e-news" element={<ENews />} />
+          <Route path="/e-news/unsubscribe" element={<ENewsUnsubscribe />} />
           <Route path="/e-news/:number" element={<ENewsIssue />} />
           <Route path="/materials" element={<Materials />} />
           <Route path="/contact" element={<Contact />} />

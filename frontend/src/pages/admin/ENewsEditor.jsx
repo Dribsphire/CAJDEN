@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
-  FaArrowLeft, FaExternalLinkAlt, FaImage, FaTrash, FaFilePdf, FaPlus, FaTimes, FaArrowUp, FaArrowDown, FaExclamationTriangle,
+  FaArrowLeft, FaExternalLinkAlt, FaImage, FaTrash, FaFilePdf, FaPlus, FaTimes, FaArrowUp, FaArrowDown, FaExclamationTriangle, FaPaperPlane,
 } from 'react-icons/fa';
 import api, { assetUrl } from '../../api/axios';
 import Toast from '../../components/Toast.jsx';
 import { IssueCover, IssueTile, issueHighlights } from '../../components/IssueCover.jsx';
 import { resizeImage } from '../../utils/resizeImage.js';
-import { decodeHtml, formatBytes } from '../../utils/format.js';
+import { decodeHtml, formatBytes, formatDate } from '../../utils/format.js';
 import './PostEditor.css';
 import './ENewsEditor.css';
 
@@ -27,6 +27,7 @@ function ENewsEditorForm() {
   const [stories, setStories] = useState(['']);         // "In this issue", one entry per story
   const [saved, setSaved] = useState({ ...EMPTY, highlights: '' });
   const [stored, setStored] = useState({ cover: null, pdf: null, size: null });
+  const [mailing, setMailing] = useState({ at: null, count: 0, subscribers: 0, sending: false });
   const [coverFile, setCoverFile] = useState(null);
   const [removeCover, setRemoveCover] = useState(false);
   const [pdfFile, setPdfFile] = useState(null);
@@ -69,10 +70,30 @@ function ENewsEditorForm() {
         setStories(lines.length ? lines : ['']);
         setSaved({ ...values, highlights: lines.join('\n') });
         setStored({ cover: issue.cover_image, pdf: issue.pdf_path, size: issue.file_size });
+        setMailing(m => ({ ...m, at: issue.emailed_at, count: Number(issue.emailed_count || 0) }));
       })
       .catch(() => setLoadError(true))
       .finally(() => setLoading(false));
   }, [id, isNew]);
+
+  useEffect(() => {
+    if (isNew) return;
+    api.get('/enews_subscribe.php').then(res => setMailing(m => ({ ...m, subscribers: (res.data.subscribers || []).length }))).catch(() => {});
+  }, [isNew]);
+
+  async function emailSubscribers() {
+    const again = mailing.at ? ' It was already emailed once; subscribers will get it again.' : '';
+    if (!confirm(`Email Issue No. ${saved.issue_number} to ${mailing.subscribers} subscriber${mailing.subscribers === 1 ? '' : 's'}?${again}`)) return;
+    setMailing(m => ({ ...m, sending: true }));
+    try {
+      const res = await api.post(`/enews.php?action=send&id=${id}`);
+      setMailing(m => ({ ...m, at: new Date().toISOString(), count: res.data.sent, sending: false }));
+      setToast({ type: 'success', message: res.data.message });
+    } catch (err) {
+      setMailing(m => ({ ...m, sending: false }));
+      setToast({ type: 'error', message: err.response?.data?.message || 'Sending failed.' });
+    }
+  }
 
   const dirty = useMemo(
     () => FIELDS.some(k => form[k] !== saved[k]) || highlights !== saved.highlights || Boolean(coverFile) || removeCover || Boolean(pdfFile),
@@ -318,6 +339,23 @@ function ENewsEditorForm() {
             </p>
             {!isNew && <button type="button" className="pe-delete" onClick={handleDelete}><FaTrash /> Delete issue</button>}
           </section>
+
+          {!isNew && savedPublished && (
+            <section className="pe-panel">
+              <h3>Email subscribers</h3>
+              <p className="pe-hint">
+                {mailing.at
+                  ? `Emailed to ${mailing.count} subscriber${mailing.count === 1 ? '' : 's'} on ${formatDate(mailing.at, { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}.`
+                  : `Not emailed yet. ${mailing.subscribers} subscriber${mailing.subscribers === 1 ? '' : 's'} will get the cover, summary, contents and a link to read it.`}
+              </p>
+              <button type="button" className="btn btn-sm en-send" onClick={emailSubscribers}
+                disabled={mailing.sending || !mailing.subscribers || dirty}
+                title={dirty ? 'Save your changes first' : !mailing.subscribers ? 'No subscribers yet' : ''}>
+                <FaPaperPlane /> {mailing.sending ? 'Sending…' : mailing.at ? 'Send again' : `Send to ${mailing.subscribers}`}
+              </button>
+              {dirty && <p className="pe-hint">Save your changes before sending.</p>}
+            </section>
+          )}
 
           <section className="pe-panel">
             <h3>Front cover</h3>

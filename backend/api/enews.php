@@ -14,6 +14,58 @@ if ($method === 'POST' && ($_GET['_method'] ?? '') === 'PUT') $method = 'PUT';
 // working (see migrations/2026_10_enews_drafts.sql).
 $hasPublished = $pdo->query("SHOW COLUMNS FROM enews_issues LIKE 'is_published'")->fetch();
 if (!$hasPublished) $pdo->exec('ALTER TABLE enews_issues ADD COLUMN is_published TINYINT(1) NOT NULL DEFAULT 1 AFTER file_size');
+// When the issue was last emailed to subscribers (see migrations/2026_10_mail.sql).
+if (!$pdo->query("SHOW COLUMNS FROM enews_issues LIKE 'emailed_at'")->fetch()) {
+    $pdo->exec('ALTER TABLE enews_issues ADD COLUMN emailed_at DATETIME DEFAULT NULL, ADD COLUMN emailed_count INT NOT NULL DEFAULT 0');
+}
+
+const SEND_BATCH = 50;      // BCC recipients per email
+const GMAIL_DAILY_LIMIT = 500;
+
+// Emails a published issue to every subscriber, in BCC batches.
+function emailIssue(PDO $pdo, array $issue) {
+    require_once __DIR__ . '/../includes/mailer.php';
+    if (!mailConfigured()) respond(false, ['message' => 'Email is not set up yet. Add the Gmail App Password in backend/.env.'], 422);
+    $subs = $pdo->query('SELECT email, token FROM enews_subscribers ORDER BY id')->fetchAll();
+    if (!$subs) respond(false, ['message' => 'There are no subscribers yet.'], 422);
+    if (count($subs) > GMAIL_DAILY_LIMIT) {
+        respond(false, ['message' => 'Gmail allows about ' . GMAIL_DAILY_LIMIT . ' recipients a day; this list has ' . count($subs) . '. Use a mailing service for lists this large.'], 422);
+    }
+    $plain = fn($v) => html_entity_decode((string) $v, ENT_QUOTES, 'UTF-8');
+    $no = 'No.' . str_pad($issue['issue_number'], 2, '0', STR_PAD_LEFT);
+    $issueUrl = siteUrl('/e-news/' . $issue['issue_number']);
+    $lines = array_filter(array_map('trim', explode("\n", $plain($issue['highlights']))));
+    $toc = $lines ? '<p style="margin:20px 0 6px;font-family:Courier New,monospace;font-size:12px;color:#6d6757;text-transform:uppercase;">In this issue</p><ol style="margin:0;padding-left:22px;">'
+        . implode('', array_map(fn($l) => '<li style="margin:4px 0;">' . e($l) . '</li>', $lines)) . '</ol>' : '';
+    $cover = $issue['cover_image']
+        ? '<p style="margin:0 0 20px;"><a href="' . e($issueUrl) . '"><img src="' . e(rtrim(env('APP_UPLOADS_URL', siteUrl('')), '/') . '/' . $issue['cover_image']) . '" alt="Cover" width="240" style="width:240px;max-width:100%;border:3px solid #14130F;display:block;"></a></p>'
+        : '';
+    $html = '<p style="margin:0 0 6px;font-family:Courier New,monospace;font-size:12px;color:#C8352B;text-transform:uppercase;">CAJDEN E-News · ' . e($plain($issue['period_label']) ?: date('F Y', strtotime($issue['published_on'] ?: 'now'))) . '</p>'
+        . '<h1 style="margin:0 0 18px;font-family:Arial Black,Arial,sans-serif;font-size:30px;line-height:1.1;">' . e($no) . ': ' . e($plain($issue['title'])) . '</h1>'
+        . $cover
+        . ($issue['summary'] ? '<p>' . nl2br(e($plain($issue['summary']))) . '</p>' : '')
+        . $toc
+        . mailButton($issueUrl, 'Read this issue');
+
+    $sent = 0; $errors = [];
+    // Each batch shares one email, so the unsubscribe link points to the general page;
+    // subscribers' personal links are in their welcome email.
+    foreach (array_chunk($subs, SEND_BATCH) as $batch) {
+        $result = sendMail([
+            'to' => mailFromAddress(),
+            'bcc' => array_column($batch, 'email'),
+            'subject' => 'CAJDEN E-News ' . $no . ': ' . $plain($issue['title']),
+            'html' => $html,
+            'footer' => 'You are receiving this because you subscribed to CAJDEN E-News. To stop, use the unsubscribe link in your welcome email or reply with "unsubscribe".',
+        ]);
+        if ($result['ok']) $sent += count($batch); else $errors[] = $result['error'];
+    }
+    if ($sent) {
+        $pdo->prepare('UPDATE enews_issues SET emailed_at = NOW(), emailed_count = :n WHERE id = :id')->execute(['n' => $sent, 'id' => $issue['id']]);
+    }
+    if (!$sent) respond(false, ['message' => 'Sending failed: ' . ($errors[0] ?? 'unknown error')], 502);
+    respond(true, ['message' => "Sent to $sent subscriber" . ($sent === 1 ? '' : 's') . ($errors ? ' (some batches failed: ' . $errors[0] . ')' : '') . '.', 'sent' => $sent]);
+}
 
 const ENEWS_TEXT_FIELDS = ['title', 'period_label', 'summary', 'highlights'];
 
@@ -60,6 +112,15 @@ switch ($method) {
     // -----------------------------------------------------
     case 'POST':
         requireAuth();
+        // POST /api/enews.php?action=send&id=4  -> email a published issue to subscribers
+        if (($_GET['action'] ?? '') === 'send') {
+            $stmt = $pdo->prepare('SELECT * FROM enews_issues WHERE id = :id');
+            $stmt->execute(['id' => (int) ($_GET['id'] ?? 0)]);
+            $issue = $stmt->fetch();
+            if (!$issue) respond(false, ['message' => 'Issue not found.'], 404);
+            if (!$issue['is_published']) respond(false, ['message' => 'Publish the issue before emailing it.'], 422);
+            emailIssue($pdo, $issue);
+        }
         $number = (int) ($_POST['issue_number'] ?? 0);
         $title = sanitize($_POST['title'] ?? '');
         $publishedOn = sanitize($_POST['published_on'] ?? '') ?: date('Y-m-d');

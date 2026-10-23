@@ -54,8 +54,6 @@
 .enews-toc-label { font-size: 0.72rem; color: var(--ink-mute); margin-bottom: -10px; }
 .empty-note a { color: var(--field); text-decoration: underline; }
 
-/* honeypot field: present for bots, invisible to people and screen readers */
-.enews-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 /* ---------- Single issue page ---------- */
 .enews-issue { margin-bottom: 72px; }
