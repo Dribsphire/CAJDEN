@@ -95,8 +95,9 @@ update `VITE_API_BASE` and `VITE_UPLOADS_BASE` in `frontend/.env`, and
 
 ## 3. Deploying to Hostinger (or similar shared PHP hosting)
 
-Run `node deploy/build.mjs` to build a ready-to-upload zip, then follow
-[deploy/DEPLOY.md](deploy/DEPLOY.md) (backup, upload, `.env` check, smoke test, rollback).
+Run `node tools/deploy.mjs`. It builds everything into `C:\xampp\cajden-deploy` (outside the
+project, so nothing there is ever committed): `site.zip` for `public_html`, a `debug.php`
+deployment checker with a fresh key, and a `GUIDE.md` with the upload steps for that release.
 
 ### Updating an existing install: Resources pages (Photos, E-News, Materials)
 

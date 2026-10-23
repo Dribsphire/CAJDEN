@@ -15,7 +15,7 @@ DirectoryIndex index.php index.html
   RewriteBase /
 
   # Backend internals: only api/ and uploads/ are meant to be reached from a browser
-  RewriteRule ^(includes|config|vendor|migrations|scripts|deploy)(/|$) - [F,L]
+  RewriteRule ^(includes|config|vendor|migrations|scripts)(/|$) - [F,L]
 
   # Serve existing files and directories directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]

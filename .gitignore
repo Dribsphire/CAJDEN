@@ -56,5 +56,3 @@ Thumbs.db
 .idea/
 *.swp
 
-# Release builds (deploy/build.mjs)
-deploy/releases/
