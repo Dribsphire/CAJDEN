@@ -1,4 +1,6 @@
 Options -MultiViews -Indexes
+# index.php adds link-preview tags (og:image etc.) to every page, then serves index.html
+DirectoryIndex index.php index.html
 
 # ---------------------------------------------------------
 # Never serve secrets or internals.
@@ -23,8 +25,8 @@ Options -MultiViews -Indexes
   # Exclude API/backend/uploads routes from being rewritten to index
   RewriteRule ^(api|backend|uploads)($|/) - [L]
 
-  # All other requests go to index.html (SPA fallback)
-  RewriteRule ^ index.html [L]
+  # All other requests go to the app, through index.php so shared links get the right preview
+  RewriteRule ^ index.php [L]
 </IfModule>
 
 # Built assets have content hashes in their names, so they can be cached for a long time;

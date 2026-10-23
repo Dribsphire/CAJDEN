@@ -82,6 +82,9 @@ Open https://infocajden.org in a private window:
 - [ ] `/admin/login` works; the dashboard loads.
 - [ ] Admin → Contact Messages → **Send test email** arrives (check spam too).
 - [ ] Send a message from the Contact page: it appears in the admin and in the Gmail inbox.
+- [ ] Link previews: paste https://infocajden.org and a news article link into the
+      [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) and press
+      **Scrape Again**. Each should show its own title and image.
 
 Everyone is logged out once after this release (the login cookie got stricter). That's expected.
 
@@ -90,6 +93,13 @@ Everyone is logged out once after this release (the login cookie got stricter). 
 Extract the backup zip from step 2 over `public_html` (and import the database export in
 phpMyAdmin if the database was changed). Or rebuild an earlier commit:
 `git checkout <commit> && node deploy/build.mjs --allow-dirty`, then `git checkout main`.
+
+## Link previews (the image when a link is shared)
+
+`index.php` in the web root adds the title, description and image for the page being shared:
+articles use their cover photo, E-News issues their cover, albums their first photo, and every
+other page the site card `og-image.jpg` (1200×630). Facebook and Messenger cache previews for
+days; after changing a post's cover, use the Sharing Debugger's **Scrape Again** to refresh it.
 
 ## Email troubleshooting
 
