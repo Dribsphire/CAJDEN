@@ -107,6 +107,7 @@ if ($front !== '' && $host !== '' && parse_url($front, PHP_URL_HOST) !== $host) 
 $pass = str_replace(' ', '', $env['GMAIL_APP_PASSWORD'] ?? '');
 $line('   ' . $warn(($env['GMAIL_ADDRESS'] ?? '') !== '') . ' GMAIL_ADDRESS = ' . (($env['GMAIL_ADDRESS'] ?? '') ?: '(empty: emails are not sent)'));
 $line('   ' . $warn(strlen($pass) === 16) . ' GMAIL_APP_PASSWORD ' . ($pass === '' ? 'is EMPTY' : 'has ' . strlen($pass) . ' letters (Google App Passwords have 16)'));
+$line('   ' . (($env['FB_APP_ID'] ?? '') !== '' ? 'OK  ' : 'note') . ' FB_APP_ID ' . (($env['FB_APP_ID'] ?? '') !== '' ? '= ' . $env['FB_APP_ID'] : 'not set (optional: only the Facebook debugger warns about it)'));
 foreach ($seen as $k => $lines) {
     if (count($lines) > 1) $line("   WARN $k appears " . count($lines) . ' times (lines ' . implode(', ', $lines) . '); the first one counts. Keep one.');
 }

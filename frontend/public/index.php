@@ -162,6 +162,9 @@ function shareTags($m) {
     }
     $tags[] = '<meta property="og:image:alt" content="' . $a($m['image_alt']) . '" />';
     $tags[] = '<meta name="twitter:card" content="summary_large_image" />';
+    // Optional: silences the Sharing Debugger's "missing fb:app_id" warning and links Facebook Insights
+    $appId = preg_replace('/\D/', '', (string) env('FB_APP_ID', ''));
+    if ($appId !== '') $tags[] = '<meta property="fb:app_id" content="' . $appId . '" />';
     $tags[] = '<!-- share:end -->';
     return implode("\n    ", $tags);
 }
